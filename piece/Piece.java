@@ -1,52 +1,38 @@
 package piece;
-import java.util.ArrayList;
-
 import main.Chess;
 
-public class Piece
+import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.ArrayList;
+
+public abstract class Piece extends Entity
 {
     //Instance Variables
-    protected String team;
-    protected int row, col;
-    
     protected int maxTilesPerMove;
     protected int[][] moveset;
-    protected ArrayList<Path> lineOfSight;
+    public List<Path> lineOfSight;
     
-    //Constructors
-    public Piece(){
-        team = "";
-        row = -1;
-        col = -1;
-    }
-    
-    public Piece(String t, int r, int c){
-        team = t;
-        row = r;
-        col = c;
-        
-        Chess.board[row][col] = this;
 
+    //Constructors
+    public Piece(String t, int r, int c){
+        super(t, r, c);
+        
+        capture(Chess.board[r][c]);
         lineOfSight = new ArrayList<>();
     }
     
     
-    protected class Path{
+    protected class Path {
         private int[] direction;
         private int max;
-        private ArrayList<Piece> pieces;
-        
-        public Path(){
-            direction = new int[]{0, 0};
-            max = 0;
-            pieces = new ArrayList<>();
-        }
+        private Set<Entity> pieces;
         
         public Path(int[] dir, int m){
             direction = dir;
             max = m;
             
-            pieces = new ArrayList<>();
+            pieces = new LinkedHashSet<>();
             buildPath(row + direction[1], col + direction[0]);
         }
         
@@ -54,118 +40,102 @@ public class Piece
             if (!legalBounds(x, y)){
                 return;
             }
+
+            Entity current = Chess.board[x][y];
             
-            pieces.add(Chess.board[x][y]);
+            pieces.add(current);
+            current.seenBy.add(Piece.this);
             
-            if (Chess.board[x][y].isOccupied() || pieces.size() >= max){
+            if (current.isOccupied() || pieces.size() >= max){
                 return;
             }
             
             buildPath(x + direction[1], y + direction[0]);
         }
+
+        public void clean(){
+            for (Entity e: pieces){
+                e.seenBy.remove(Piece.this);
+            }
+        }
         
-        public void update(){
+        public void rebuild(){
             pieces.clear();
             buildPath(row + direction[1], col + direction[0]);
         }
         
         public void updateMax(int m){
             max = m;
-            update();
+            clean();
+            rebuild();
         }
-        
-        public String toString(){
-            String output = "";
-            
-            for (Piece p: pieces){
-                output += "["+p.row+", "+p.col+"] - ";
-            }
-            return output;
-        }
-    }
-    
-    
-    //Boolean Methods
-    public boolean legalBounds(int x, int y){
-        return (x < Chess.board.length && x >= 0) && (y < Chess.board[0].length && y >= 0);
-    }
-    public boolean isOccupied(){
-        return !(this instanceof Tile);
-    }
-    public boolean isAlly(Piece target){
-        return team.equals(target.team);
-    }
-    
-    
-    //Path Methods
-    public boolean inLineOfSight(Piece target){
-        for (Path p: lineOfSight){
-            if (p.pieces.contains(target)){
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    public Piece getFirst(int x, int y, int[] dir){
-        if (!legalBounds(x, y)){
-            return null;
-        }
-        
-        if (Chess.board[x][y].isOccupied()){
-            return Chess.board[x][y];
-        }
-        
-        return getFirst(x + dir[1], y + dir[0], dir);
     }
     
 
-    //Update Methods
-    public void updateLineOfSight(){
+    //Path Methods
+    public Path inLineOfSight(Entity target){
         for (Path p: lineOfSight){
-            p.update();
-        }
-    }
-    
-    public void updateCrossing(){
-        for (int[] dir: Chess.directions){
-            Piece first = getFirst(row + dir[1], col + dir[0], dir);
-            
-            if (first != null){
-                first.updateLineOfSight();
+            if (p.pieces.contains(target)){
+                return p;
             }
         }
+        
+        return null;
+    }
+
+    public void cleanAll(){
+        for (Path p: lineOfSight){
+            p.clean();
+        }
+    }
+
+    public void rebuildAll(){
+        for (Path p: lineOfSight){
+            p.rebuild();
+        }
+    }
+
+    public void updateLineOfSight(){
+        cleanAll();
+        rebuildAll();
     }
     
+
     //Move Methods
     public boolean legalMove(int x, int y){
         if (!legalBounds(x, y)){
             return false;
         }
         
-        Piece target = Chess.board[x][y];
+        Entity target = Chess.board[x][y];
         
-        if (isAlly(target) || !inLineOfSight(target)){
-            return false;
+        if (!isAlly(target) && inLineOfSight(target) != null){
+            return true;
         }
         
-        return true;
+        return false;
     }
     
-    public void capture(Piece target){
+    @Override
+    public void remove(){
+        super.remove();
+        cleanAll();
+    }
+    
+    public void capture(Entity target){
         row = target.row;
         col = target.col;
+
         Chess.board[row][col] = this;
+
+        target.remove();
     }
     
     public void move(int x, int y){
         Chess.board[row][col] = new Tile(row, col);
-        updateCrossing();
-        
+        remove();
+
         capture(Chess.board[x][y]);
-        
-        updateCrossing();
-        updateLineOfSight();
+        rebuildAll();
     }
 }

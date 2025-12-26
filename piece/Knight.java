@@ -1,8 +1,9 @@
 package piece;
+
 public class Knight extends Piece
 {
-    public Knight(String t, int c, int r){
-        super(t,c,r);
+    public Knight(String t, int r, int c){
+        super(t, r, c);
         maxTilesPerMove = 1;
         
         moveset = new int[][]{

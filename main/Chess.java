@@ -1,49 +1,54 @@
 package main;
-import java.util.Scanner;
+import piece.*;
 
-import piece.Bishop;
-import piece.Piece;
-import piece.Queen;
-import piece.Rook;
-import piece.Tile;
-
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Chess
 {
-    public static Piece[][] board = new Piece[8][8];
-    public static int[][] directions = new int[][]{
-        {0,-1},{1,0},{0,1},{-1,0},
-        {1,-1},{1,1},{-1,1},{-1,-1}
-    };
-    
-    public static void main(String[] args){
+    public static Entity[][] board;
+
+    public static void main(String[] args) {
+        board = new Entity[8][8];
+        Scanner reader = new Scanner(System.in);
+
         for (int i = 0; i < board.length; i++){
             for (int j = 0; j < board[i].length; j++){
-                Tile tile = new Tile(i, j);
+                board[i][j] = new Tile(i, j);
             }
         }
+
+        Queen q1 = new Queen("white", 3, 0);
+        Bishop b1 = new Bishop("black", 4, 4);
+        //Rook r1 = new Rook("black", 0, 5);
+
+        String move;
         
-        Queen queen = new Queen("white", 4, 4);
-        Bishop bishop = new Bishop("white", 5, 3);
-        Rook rook = new Rook("white", 6, 0);
-        
-        System.out.println("BEFORE MOVE:");
-        System.out.println(queen);
-        System.out.println(bishop);
-        System.out.println(rook);
-        
-        System.out.println();
-        queen.move(4, 0);
-        
-        System.out.println("AFTER MOVE:");
-        System.out.println(queen);
-        System.out.println(bishop);
-        System.out.println(rook);
-        
-        for (Piece[] row: board){
-            System.out.println(Arrays.toString(row));
+        while(true){
+            printBoard();
+            System.out.println(Chess.board[1][7].seenBy);
+
+            move = reader.nextLine();
+
+            while(!q1.legalMove(56 - move.charAt(1), move.charAt(0) - 97)){
+                move = reader.nextLine();
+            }
+
+            q1.move(56 - move.charAt(1), move.charAt(0) - 97);
         }
+    }
+
+    public static void printBoard(){
+        for (int i = 0; i < board.length; i++){
+            System.out.println(Math.abs(i - board.length) + " " + Arrays.toString(board[i]));
+        }
+
+        System.out.print(" ");
+
+        for (int i = 97; i < 97 + board.length; i++){
+            System.out.print("  "+ (char)i);
+        }
+
+        System.out.println();
     }
 }

@@ -3,8 +3,8 @@ import main.Chess;
 
 public class Queen extends Piece
 {
-    public Queen(String t, int c, int r){
-        super(t,c,r);
+    public Queen(String t, int r, int c){
+        super(t, r, c);
         maxTilesPerMove = Chess.board.length - 1;
         
         moveset = new int[][]{

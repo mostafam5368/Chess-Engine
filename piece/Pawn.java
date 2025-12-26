@@ -1,11 +1,12 @@
 package piece;
+
 public class Pawn extends Piece
 {
     private int maxTilesPerCapture;
     private int[][] captureset;
     
-    public Pawn(String t, int c, int r){
-        super(t,c,r);
+    public Pawn(String t, int r, int c){
+        super(t, r, c);
         maxTilesPerMove = 2;
         maxTilesPerCapture = 1;
         
@@ -21,6 +22,7 @@ public class Pawn extends Piece
         captureset = new int[][]{
             {-1, forward},{1, forward}
         };
+        
         
         for (int[] dir: moveset){
             lineOfSight.add(new Path(dir, maxTilesPerMove));
