@@ -63,11 +63,15 @@ public abstract class Piece extends Entity
             pieces.clear();
             buildPath(row + direction[1], col + direction[0]);
         }
+
+        public void update(){
+            clean();
+            rebuild();
+        }
         
         public void updateMax(int m){
             max = m;
-            clean();
-            rebuild();
+            update();
         }
     }
     

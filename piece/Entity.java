@@ -47,8 +47,10 @@ public abstract class Entity
     }
 
     public void updateSeenBy(){
-        for (Piece piece: seenBy){
-            piece.updateLineOfSight();
+        Set<Piece> copy = new HashSet<>(seenBy);
+
+        for (Piece piece: copy){
+            piece.inLineOfSight(this).update();
         }
     }
 }
