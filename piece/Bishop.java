@@ -11,13 +11,11 @@ public class Bishop extends Piece
             {1,-1},{1,1},{-1,1},{-1,-1}
         };
         
-        for (int[] dir: moveset){
-            lineOfSight.add(new Path(dir, maxTilesPerMove));
-        }
+        lineOfSight = new Path[moveset.length];
+        buildPaths();
     }
     
     public String toString(){
         return "%";
     }
-    
 }

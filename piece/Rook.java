@@ -11,13 +11,11 @@ public class Rook extends Piece
             {0,-1},{1,0},{0,1},{-1,0}
         };
         
-        for (int[] dir: moveset){
-            lineOfSight.add(new Path(dir, maxTilesPerMove));
-        }
+        lineOfSight = new Path[moveset.length];
+        buildPaths();
     }
     
     public String toString(){
         return "#";
-    }
-    
+    } 
 }

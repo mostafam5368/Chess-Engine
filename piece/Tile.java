@@ -7,9 +7,9 @@ public class Tile extends Entity
     }
     
     public String toString(){
-        // if (isSeen()){
-        //     return "!";
-        // }
+        if (isSeen()){
+            return "!";
+        }
 
         return "_";
     }

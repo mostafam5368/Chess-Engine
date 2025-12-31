@@ -23,13 +23,17 @@ public class Pawn extends Piece
             {-1, forward},{1, forward}
         };
         
-        
-        for (int[] dir: moveset){
-            lineOfSight.add(new Path(dir, maxTilesPerMove));
-        }
-        
-        for (int[] dir: captureset){
-            lineOfSight.add(new Path(dir, maxTilesPerCapture));
+        lineOfSight = new Path[moveset.length + captureset.length];
+        buildPaths();
+    }
+    
+    @Override
+    public void buildPaths(){
+        super.buildPaths();
+
+        for (int i = moveset.length - 1; i < captureset.length; i++){
+            int[] dir = captureset[i];
+            lineOfSight[i] = new Path(dir, maxTilesPerCapture);
         }
     }
     
@@ -39,7 +43,7 @@ public class Pawn extends Piece
         
         if (maxTilesPerMove > 1){
             maxTilesPerMove = 1;
-            lineOfSight.get(0).updateMax(maxTilesPerMove);
+            lineOfSight[0].updateMax(maxTilesPerMove);
         }
     }
     

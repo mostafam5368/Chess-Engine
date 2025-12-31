@@ -3,23 +3,19 @@ import main.Chess;
 
 import java.util.Set;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.ArrayList;
 
 public abstract class Piece extends Entity
 {
     //Instance Variables
     protected int maxTilesPerMove;
     protected int[][] moveset;
-    public List<Path> lineOfSight;
+    public Path[] lineOfSight;
     
 
     //Constructors
     public Piece(String t, int r, int c){
         super(t, r, c);
-        
         capture(Chess.board[r][c]);
-        lineOfSight = new ArrayList<>();
     }
     
     
@@ -33,10 +29,10 @@ public abstract class Piece extends Entity
             max = m;
             
             pieces = new LinkedHashSet<>();
-            buildPath(row + direction[1], col + direction[0]);
+            build(row + direction[1], col + direction[0]);
         }
         
-        public void buildPath(int x, int y){
+        public void build(int x, int y){
             if (!legalBounds(x, y)){
                 return;
             }
@@ -50,10 +46,10 @@ public abstract class Piece extends Entity
                 return;
             }
             
-            buildPath(x + direction[1], y + direction[0]);
+            build(x + direction[1], y + direction[0]);
         }
 
-        public void clean(){
+        public void cleanse(){
             for (Entity e: pieces){
                 e.seenBy.remove(Piece.this);
             }
@@ -61,11 +57,11 @@ public abstract class Piece extends Entity
         
         public void rebuild(){
             pieces.clear();
-            buildPath(row + direction[1], col + direction[0]);
+            build(row + direction[1], col + direction[0]);
         }
 
         public void update(){
-            clean();
+            cleanse();
             rebuild();
         }
         
@@ -87,21 +83,28 @@ public abstract class Piece extends Entity
         return null;
     }
 
-    public void cleanAll(){
-        for (Path p: lineOfSight){
-            p.clean();
+    public void buildPaths(){
+        for (int i = 0; i < moveset.length; i++){
+            int[] dir = moveset[i];
+            lineOfSight[i] = new Path(dir, maxTilesPerMove);
         }
     }
 
-    public void rebuildAll(){
+    public void cleansePaths(){
+        for (Path p: lineOfSight){
+            p.cleanse();
+        }
+    }
+
+    public void rebuildPaths(){
         for (Path p: lineOfSight){
             p.rebuild();
         }
     }
 
     public void updateLineOfSight(){
-        cleanAll();
-        rebuildAll();
+        cleansePaths();
+        rebuildPaths();
     }
     
 
@@ -123,7 +126,7 @@ public abstract class Piece extends Entity
     @Override
     public void remove(){
         super.remove();
-        cleanAll();
+        cleansePaths();
     }
     
     public void capture(Entity target){
@@ -140,6 +143,6 @@ public abstract class Piece extends Entity
         remove();
 
         capture(Chess.board[x][y]);
-        rebuildAll();
+        rebuildPaths();
     }
 }

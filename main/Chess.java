@@ -18,15 +18,13 @@ public class Chess
             }
         }
 
-        Queen q1 = new Queen("white", 3, 0);
-        Bishop b1 = new Bishop("black", 4, 4);
-        Rook r1 = new Rook("black", 0, 5);
+        Queen q1 = new Queen("white", 6, 3);
 
         String move;
         
         while(true){
             printBoard();
-            System.out.println(Chess.board[1][7].seenBy);
+            System.out.println(board[1][7].seenBy);
 
             move = reader.nextLine();
 
