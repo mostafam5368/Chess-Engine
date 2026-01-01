@@ -18,13 +18,12 @@ public class Chess
             }
         }
 
-        Queen q1 = new Queen("white", 6, 3);
+        Pawn q1 = new Pawn("white", 6, 3);
 
         String move;
         
         while(true){
             printBoard();
-            System.out.println(board[1][7].seenBy);
 
             move = reader.nextLine();
 

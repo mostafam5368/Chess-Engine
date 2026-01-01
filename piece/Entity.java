@@ -9,7 +9,7 @@ public abstract class Entity
     //Instance Variables
     protected String team;
     protected int row, col;
-    public Set<Piece> seenBy;
+    protected Set<Piece> seenBy;
 
 
     //Constructors

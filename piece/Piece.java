@@ -9,7 +9,7 @@ public abstract class Piece extends Entity
     //Instance Variables
     protected int maxTilesPerMove;
     protected int[][] moveset;
-    public Path[] lineOfSight;
+    protected Path[] lineOfSight;
     
 
     //Constructors
@@ -27,8 +27,8 @@ public abstract class Piece extends Entity
         public Path(int[] dir, int m){
             direction = dir;
             max = m;
-            
             pieces = new LinkedHashSet<>();
+
             build(row + direction[1], col + direction[0]);
         }
         
@@ -116,7 +116,7 @@ public abstract class Piece extends Entity
         
         Entity target = Chess.board[x][y];
         
-        if (!isAlly(target) && inLineOfSight(target) != null){
+        if (inLineOfSight(target) != null && !isAlly(target)){
             return true;
         }
         

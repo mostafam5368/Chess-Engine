@@ -2,15 +2,16 @@ package piece;
 
 public class Pawn extends Piece
 {
-    private int maxTilesPerCapture;
+    private int maxTilesPerCapture, forward;
     private int[][] captureset;
     
     public Pawn(String t, int r, int c){
         super(t, r, c);
+
         maxTilesPerMove = 2;
         maxTilesPerCapture = 1;
         
-        int forward = -1;
+        forward = -1;
         if (team.equals("black")){
             forward = 1;
         }
@@ -18,7 +19,6 @@ public class Pawn extends Piece
         moveset = new int[][]{
             {0, forward}
         };
-        
         captureset = new int[][]{
             {-1, forward},{1, forward}
         };
@@ -31,10 +31,8 @@ public class Pawn extends Piece
     public void buildPaths(){
         super.buildPaths();
 
-        for (int i = moveset.length - 1; i < captureset.length; i++){
-            int[] dir = captureset[i];
-            lineOfSight[i] = new Path(dir, maxTilesPerCapture);
-        }
+        lineOfSight[1] = new Path(captureset[0], maxTilesPerCapture);
+        lineOfSight[2] = new Path(captureset[1], maxTilesPerCapture);
     }
     
     @Override
@@ -42,8 +40,7 @@ public class Pawn extends Piece
         super.move(x, y);
         
         if (maxTilesPerMove > 1){
-            maxTilesPerMove = 1;
-            lineOfSight[0].updateMax(maxTilesPerMove);
+            lineOfSight[0].updateMax(1);
         }
     }
     
