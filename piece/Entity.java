@@ -38,15 +38,15 @@ public abstract class Entity
     public boolean isSeen(){
         return !seenBy.isEmpty();
     }
-
+    
     
     //Void Methods
     public void remove(){
-        updateSeenBy();
+        notifySeenBy();
         seenBy.clear();
     }
 
-    public void updateSeenBy(){
+    public void notifySeenBy(){
         Set<Piece> copy = new HashSet<>(seenBy);
 
         for (Piece piece: copy){

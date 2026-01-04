@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 public abstract class Piece extends Entity
 {
     //Instance Variables
-    protected int maxTilesPerMove;
+    protected int reach;
     protected int[][] moveset;
     protected Path[] lineOfSight;
     
@@ -22,14 +22,20 @@ public abstract class Piece extends Entity
     protected class Path {
         private int[] direction;
         private int max;
+        private Class<?> rule;
         private Set<Entity> pieces;
-        
-        public Path(int[] dir, int m){
+
+        public Path(int[] dir, int m, Class<? extends Entity> r){
             direction = dir;
             max = m;
+            rule = r;
             pieces = new LinkedHashSet<>();
 
             build(row + direction[1], col + direction[0]);
+        }
+
+        public Path(int[] dir, int m){
+            this(dir, m, Entity.class);
         }
         
         public void build(int x, int y){
@@ -49,9 +55,14 @@ public abstract class Piece extends Entity
             build(x + direction[1], y + direction[0]);
         }
 
+        public boolean captureable(Entity target){
+            return rule.isInstance(target);
+        }
+
         public void cleanse(){
             for (Entity e: pieces){
                 e.seenBy.remove(Piece.this);
+                //e.notifySeenBy();
             }
         }
         
@@ -86,7 +97,7 @@ public abstract class Piece extends Entity
     public void buildPaths(){
         for (int i = 0; i < moveset.length; i++){
             int[] dir = moveset[i];
-            lineOfSight[i] = new Path(dir, maxTilesPerMove);
+            lineOfSight[i] = new Path(dir, reach);
         }
     }
 
@@ -115,9 +126,12 @@ public abstract class Piece extends Entity
         }
         
         Entity target = Chess.board[x][y];
+        Path p = inLineOfSight(target);
         
-        if (inLineOfSight(target) != null && !isAlly(target)){
-            return true;
+        if (p != null){
+            if (!isAlly(target) && p.captureable(target)){
+                return true;
+            }
         }
         
         return false;
