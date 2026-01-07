@@ -1,8 +1,8 @@
 package piece;
 import main.Chess;
 
-import java.util.Set;
-import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 public abstract class Piece extends Entity
 {
@@ -22,52 +22,52 @@ public abstract class Piece extends Entity
     protected class Path {
         private int[] direction;
         private int max;
-        private Class<?> rule;
-        private Set<Entity> pieces;
+        private Class<? extends Entity> rule;
+        private Map<Entity, Boolean> entities;
+
+        public Path(int[] dir, int m){
+            this(dir, m, Entity.class);
+        }
 
         public Path(int[] dir, int m, Class<? extends Entity> r){
             direction = dir;
             max = m;
             rule = r;
-            pieces = new LinkedHashSet<>();
-
+            entities = new HashMap<>();
+            
             build(row + direction[1], col + direction[0]);
         }
 
-        public Path(int[] dir, int m){
-            this(dir, m, Entity.class);
+        public void add(Entity target){
+            boolean val = legality(target) && rule.isInstance(target);
+
+            entities.put(target, val);
+            target.seenBy.put(Piece.this, val);
         }
         
         public void build(int x, int y){
-            if (!legalBounds(x, y)){
+            if (!validBounds(x, y)){
                 return;
             }
 
             Entity current = Chess.board[x][y];
+            add(current);
             
-            pieces.add(current);
-            current.seenBy.add(Piece.this);
-            
-            if (current.isOccupied() || pieces.size() >= max){
+            if (current.isOccupied() || entities.size() >= max){
                 return;
             }
             
             build(x + direction[1], y + direction[0]);
         }
 
-        public boolean captureable(Entity target){
-            return rule.isInstance(target);
-        }
-
         public void cleanse(){
-            for (Entity e: pieces){
+            for (Entity e: entities.keySet()){
                 e.seenBy.remove(Piece.this);
-                //e.notifySeenBy();
             }
         }
         
         public void rebuild(){
-            pieces.clear();
+            entities.clear();
             build(row + direction[1], col + direction[0]);
         }
 
@@ -86,7 +86,7 @@ public abstract class Piece extends Entity
     //Path Methods
     public Path inLineOfSight(Entity target){
         for (Path p: lineOfSight){
-            if (p.pieces.contains(target)){
+            if (p.entities.containsKey(target)){
                 return p;
             }
         }
@@ -107,29 +107,19 @@ public abstract class Piece extends Entity
         }
     }
 
-    public void rebuildPaths(){
-        for (Path p: lineOfSight){
-            p.rebuild();
-        }
-    }
-
-    public void updateLineOfSight(){
-        cleansePaths();
-        rebuildPaths();
-    }
-    
 
     //Move Methods
-    public boolean legalMove(int x, int y){
-        if (!legalBounds(x, y)){
+    public boolean legality(Entity target){
+        return !isAlly(target);
+    }
+
+    public boolean validMove(int x, int y){
+        if (!validBounds(x, y)){
             return false;
         }
-        
-        Entity target = Chess.board[x][y];
-        Path p = inLineOfSight(target);
-        
-        if (p != null){
-            if (!isAlly(target) && p.captureable(target)){
+
+        for (Path p: lineOfSight){
+            if (p.entities.getOrDefault(Chess.board[x][y], false)){
                 return true;
             }
         }
@@ -148,7 +138,6 @@ public abstract class Piece extends Entity
         col = target.col;
 
         Chess.board[row][col] = this;
-
         target.remove();
     }
     
@@ -157,6 +146,6 @@ public abstract class Piece extends Entity
         remove();
 
         capture(Chess.board[x][y]);
-        rebuildPaths();
+        buildPaths();
     }
 }

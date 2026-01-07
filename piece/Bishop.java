@@ -1,11 +1,11 @@
 package piece;
 import main.Chess;
 
-public class Bishop extends Piece
+public final class Bishop extends Piece
 {
     public Bishop(String t, int r, int c){
         super(t, r, c);
-        reach = Chess.board.length - 1;
+        reach = Chess.INF_REACH;
         
         moveset = new int[][]{
             {1,-1},{1,1},{-1,1},{-1,-1}

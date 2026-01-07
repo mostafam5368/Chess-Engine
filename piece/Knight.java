@@ -1,6 +1,6 @@
 package piece;
 
-public class Knight extends Piece
+public final class Knight extends Piece
 {
     public Knight(String t, int r, int c){
         super(t, r, c);

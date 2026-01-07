@@ -1,15 +1,15 @@
 package piece;
 import main.Chess;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 public abstract class Entity
 {
     //Instance Variables
     protected String team;
     protected int row, col;
-    protected Set<Piece> seenBy;
+    public Map<Piece, Boolean> seenBy;
 
 
     //Constructors
@@ -18,12 +18,12 @@ public abstract class Entity
         row = r;
         col = c;
 
-        seenBy = new HashSet<>();
+        seenBy = new HashMap<>();
     }
 
 
     //Boolean Methods
-    public boolean legalBounds(int x, int y){
+    public boolean validBounds(int x, int y){
         return (x < Chess.board.length && x >= 0) && (y < Chess.board[0].length && y >= 0);
     }
 
@@ -36,9 +36,8 @@ public abstract class Entity
     }
 
     public boolean isSeen(){
-        return !seenBy.isEmpty();
+        return seenBy.containsValue(true);
     }
-    
     
     //Void Methods
     public void remove(){
@@ -47,9 +46,9 @@ public abstract class Entity
     }
 
     public void notifySeenBy(){
-        Set<Piece> copy = new HashSet<>(seenBy);
+        Map<Piece, Boolean> copy = new HashMap<>(seenBy);
 
-        for (Piece piece: copy){
+        for (Piece piece: copy.keySet()){
             piece.inLineOfSight(this).update();
         }
     }

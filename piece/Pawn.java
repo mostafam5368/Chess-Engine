@@ -1,11 +1,12 @@
 package piece;
 
-public class Pawn extends Piece
+public final class Pawn extends Piece
 {
     private int forward;
 
     public Pawn(String t, int r, int c){
         super(t, r, c);
+
         reach = 2;
         forward = -1;
         
@@ -16,7 +17,7 @@ public class Pawn extends Piece
         lineOfSight = new Path[moveset.length];
         buildPaths();
     }
-    
+
     @Override
     public void buildPaths(){
         lineOfSight[0] = new Path(moveset[0], reach, Tile.class);

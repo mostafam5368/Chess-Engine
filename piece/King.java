@@ -1,6 +1,6 @@
 package piece;
 
-public class King extends Piece
+public final class King extends Piece
 {
     public King(String t, int r, int c){
         super(t, r, c);

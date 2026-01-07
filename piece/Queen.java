@@ -1,11 +1,11 @@
 package piece;
 import main.Chess;
 
-public class Queen extends Piece
+public final class Queen extends Piece
 {
     public Queen(String t, int r, int c){
         super(t, r, c);
-        reach = Chess.board.length - 1;
+        reach = Chess.INF_REACH;
         
         moveset = new int[][]{
             {0,-1},{1,0},{0,1},{-1,0},
