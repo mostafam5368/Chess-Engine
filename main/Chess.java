@@ -15,10 +15,9 @@ public class Chess
         reader = new Scanner(System.in);
         fillBoard();
 
-        Queen q1 = new Queen("white", 3, 0);
-        Rook r1 = new Rook("black", 0, 5);
-        Bishop b1 = new Bishop("black", 4, 4);
-        
+        Queen q1 = new Queen("white", 0, 0);
+        //Rook r1 = new Rook("black", 0, 2);
+
         while (true){
             printBoard();
             System.out.println(board[1][7].seenBy);

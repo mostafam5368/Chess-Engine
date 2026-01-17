@@ -1,6 +1,9 @@
 package piece;
 import main.Chess;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -9,21 +12,23 @@ public abstract class Piece extends Entity
     //Instance Variables
     protected int reach;
     protected int[][] moveset;
-    protected Path[] lineOfSight;
+    public Map<Entity, Path> lineOfSight;
     
 
     //Constructors
     public Piece(String t, int r, int c){
         super(t, r, c);
+        lineOfSight = new HashMap<>();
+        
         capture(Chess.board[r][c]);
     }
     
     
-    protected class Path {
+    public class Path {
         private int[] direction;
         private int max;
         private Class<? extends Entity> rule;
-        private Map<Entity, Boolean> entities;
+        private Set<Entity> entities;
 
         public Path(int[] dir, int m){
             this(dir, m, Entity.class);
@@ -33,16 +38,16 @@ public abstract class Piece extends Entity
             direction = dir;
             max = m;
             rule = r;
-            entities = new HashMap<>();
+            entities = new LinkedHashSet<>();
             
             build(row + direction[1], col + direction[0]);
         }
 
-        public void add(Entity target){
-            boolean val = legality(target) && rule.isInstance(target);
+        public void discover(Entity target){
+            entities.add(target);
+            lineOfSight.put(target, this);
 
-            entities.put(target, val);
-            target.seenBy.put(Piece.this, val);
+            target.seenBy.put(Piece.this, legality(target) && rule.isInstance(target));
         }
         
         public void build(int x, int y){
@@ -51,7 +56,7 @@ public abstract class Piece extends Entity
             }
 
             Entity current = Chess.board[x][y];
-            add(current);
+            discover(current);
             
             if (current.isOccupied() || entities.size() >= max){
                 return;
@@ -61,12 +66,16 @@ public abstract class Piece extends Entity
         }
 
         public void cleanse(){
-            for (Entity e: entities.keySet()){
+            for (Entity e: entities){
                 e.seenBy.remove(Piece.this);
             }
         }
         
         public void rebuild(){
+            for (Entity e: entities){
+                lineOfSight.remove(e);
+            }
+
             entities.clear();
             build(row + direction[1], col + direction[0]);
         }
@@ -80,35 +89,30 @@ public abstract class Piece extends Entity
             max = m;
             update();
         }
+
+        public String toString(){
+            return Arrays.toString(direction);
+        }
     }
     
 
     //Path Methods
-    public Path inLineOfSight(Entity target){
-        for (Path p: lineOfSight){
-            if (p.entities.containsKey(target)){
-                return p;
-            }
-        }
-        
-        return null;
-    }
-
     public void buildPaths(){
-        for (int i = 0; i < moveset.length; i++){
-            int[] dir = moveset[i];
-            lineOfSight[i] = new Path(dir, reach);
+        lineOfSight.clear();
+
+        for (int[] dir: moveset){
+            Path path = new Path(dir, reach);
         }
     }
 
     public void cleansePaths(){
-        for (Path p: lineOfSight){
+        for (Path p: lineOfSight.values()){
             p.cleanse();
         }
     }
 
 
-    //Move Methods
+    //Move Validation Methods
     public boolean legality(Entity target){
         return !isAlly(target);
     }
@@ -118,15 +122,11 @@ public abstract class Piece extends Entity
             return false;
         }
 
-        for (Path p: lineOfSight){
-            if (p.entities.getOrDefault(Chess.board[x][y], false)){
-                return true;
-            }
-        }
-        
-        return false;
+        return Chess.board[x][y].seenBy.getOrDefault(this, false);
     }
     
+
+    //Movement Methods
     @Override
     public void remove(){
         super.remove();

@@ -49,7 +49,7 @@ public abstract class Entity
         Map<Piece, Boolean> copy = new HashMap<>(seenBy);
 
         for (Piece piece: copy.keySet()){
-            piece.inLineOfSight(this).update();
+            piece.lineOfSight.get(this).update();
         }
     }
 }

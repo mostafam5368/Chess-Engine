@@ -12,7 +12,7 @@ public final class Queen extends Piece
             {1,-1},{1,1},{-1,1},{-1,-1}
         };
         
-        lineOfSight = new Path[moveset.length];
+        //lineOfSight = new Path[moveset.length];
         buildPaths();
     }
     
