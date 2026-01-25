@@ -1,5 +1,7 @@
 package piece;
 
+import java.util.HashMap;
+
 public final class Pawn extends Piece
 {
     private int forward;
@@ -14,24 +16,27 @@ public final class Pawn extends Piece
             {0, forward},{-1, forward},{1, forward}
         };
         
+        paths = new Path[moveset.length];
         buildPaths();
     }
 
     @Override
     public void buildPaths(){
-        Path p1 = new Path(moveset[0], reach, Tile.class);
-        Path p2 = new Path(moveset[1], 1, Piece.class);
-        Path p3 = new Path(moveset[2], 1, Piece.class);
+        foundEntities = new HashMap<>();
+        
+        paths[0] = new Path(moveset[0], reach, Tile.class);
+        paths[1] = new Path(moveset[1], 1, Piece.class);
+        paths[2] = new Path(moveset[2], 1, Piece.class);
     }
     
     @Override
     public void move(int x, int y){
         super.move(x, y);
         
-        // if (reach > 1){
-        //     reach = 1;
-        //     lineOfSight.get(Chess.board[x][y]).updateMax(1);
-        // }
+        if (reach > 1){
+            reach = 1;
+            buildPaths();
+        }
     }
     
     public String toString(){

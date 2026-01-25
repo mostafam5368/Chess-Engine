@@ -11,7 +11,7 @@ public final class Bishop extends Piece
             {1,-1},{1,1},{-1,1},{-1,-1}
         };
         
-        //lineOfSight = new Path[moveset.length];
+        paths = new Path[moveset.length];
         buildPaths();
     }
     

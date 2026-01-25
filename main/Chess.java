@@ -11,16 +11,17 @@ public class Chess
 
     private static Scanner reader;
 
-    public static void play() {
+    public static void play(){
         reader = new Scanner(System.in);
         fillBoard();
 
-        Queen q1 = new Queen("white", 0, 0);
-        //Rook r1 = new Rook("black", 0, 2);
+        Queen q1 = new Queen("white", 3, 0);
+        Bishop b1 = new Bishop("black", 4, 4);
+        Rook r1 = new Rook("black", 0, 5);
 
         while (true){
             printBoard();
-            System.out.println(board[1][7].seenBy);
+            System.out.println(board[1][7].foundBy);
             prompt(q1);
         }
     }
@@ -56,7 +57,7 @@ public class Chess
             x = 56 - move.charAt(1);
             y = move.charAt(0) - 97;
 
-        } while (!piece.validMove(x, y));
+        } while (!piece.legalMove(x, y));
 
         piece.move(x, y);
     }

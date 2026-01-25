@@ -1,7 +1,6 @@
 package piece;
 import main.Chess;
 
-import java.util.Map;
 import java.util.HashMap;
 
 public abstract class Entity
@@ -9,7 +8,7 @@ public abstract class Entity
     //Instance Variables
     protected String team;
     protected int row, col;
-    public Map<Piece, Boolean> seenBy;
+    public HashMap<Piece, Boolean> foundBy;
 
 
     //Constructors
@@ -17,13 +16,12 @@ public abstract class Entity
         team = t;
         row = r;
         col = c;
-
-        seenBy = new HashMap<>();
+        foundBy = new HashMap<>();
     }
 
 
     //Boolean Methods
-    public boolean validBounds(int x, int y){
+    public boolean legalBounds(int x, int y){
         return (x < Chess.board.length && x >= 0) && (y < Chess.board[0].length && y >= 0);
     }
 
@@ -36,20 +34,20 @@ public abstract class Entity
     }
 
     public boolean isSeen(){
-        return seenBy.containsValue(true);
+        return foundBy.containsValue(true);
     }
     
     //Void Methods
-    public void remove(){
-        notifySeenBy();
-        seenBy.clear();
+    public void removeFromBoard(){
+        notifyBoard();
+        foundBy.clear();
     }
 
-    public void notifySeenBy(){
-        Map<Piece, Boolean> copy = new HashMap<>(seenBy);
+    public void notifyBoard(){
+        HashMap<Piece, Boolean> copy = new HashMap<>(foundBy);
 
         for (Piece piece: copy.keySet()){
-            piece.lineOfSight.get(this).update();
+            piece.foundEntities.get(this).refreshAt(this);
         }
     }
 }

@@ -11,7 +11,7 @@ public final class Knight extends Piece
             {2,-1},{2,1},{-2,1}, {-2,-1}
         };
         
-        //lineOfSight = new Path[moveset.length];
+        paths = new Path[moveset.length];
         buildPaths();
     }
     

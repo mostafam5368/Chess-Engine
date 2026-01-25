@@ -11,7 +11,7 @@ public final class Rook extends Piece
             {0,-1},{1,0},{0,1},{-1,0}
         };
         
-        //lineOfSight = new Path[moveset.length];
+        paths = new Path[moveset.length];
         buildPaths();
     }
     
