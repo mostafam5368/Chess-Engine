@@ -6,8 +6,8 @@ public final class Pawn extends Piece
 {
     private int forward;
 
-    public Pawn(String t, int r, int c){
-        super(t, r, c);
+    public Pawn(King k, int r, int c){
+        super(k, r, c);
 
         reach = 2;
         forward = -1;
@@ -22,7 +22,7 @@ public final class Pawn extends Piece
 
     @Override
     public void buildPaths(){
-        foundEntities = new HashMap<>();
+        seenEntities = new HashMap<>();
         
         paths[0] = new Path(moveset[0], reach, Tile.class);
         paths[1] = new Path(moveset[1], 1, Piece.class);
@@ -30,16 +30,27 @@ public final class Pawn extends Piece
     }
     
     @Override
-    public void move(int x, int y){
-        super.move(x, y);
-        
-        if (reach > 1){
-            reach = 1;
-            buildPaths();
+    public boolean move(int x, int y){
+        boolean output = super.move(x, y);
+
+        if (output){
+            if (reach > 1){
+                reach--;
+                paths[0].clearVisibility();
+                paths[0] = new Path(moveset[0], reach, Tile.class);
+            }
         }
+
+        return output;
     }
     
     public String toString(){
-        return "^";
+        String str = "P";
+
+        if (team.equals("black")){
+            str = str.toLowerCase();
+        }
+
+        return str;
     }
 }

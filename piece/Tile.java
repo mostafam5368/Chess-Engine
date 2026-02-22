@@ -7,9 +7,9 @@ public final class Tile extends Entity
     }
     
     public String toString(){
-        // if (isSeen()){
-        //     return "!";
-        // }
+        if (isCapturable()){
+            return "!";
+        }
 
         return "_";
     }

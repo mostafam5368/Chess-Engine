@@ -3,8 +3,8 @@ import main.Chess;
 
 public final class Rook extends Piece
 {
-    public Rook(String t, int r, int c){
-        super(t, r, c);
+    public Rook(King k, int r, int c){
+        super(k, r, c);
         reach = Chess.INF_REACH;
         
         moveset = new int[][]{
@@ -16,6 +16,12 @@ public final class Rook extends Piece
     }
     
     public String toString(){
-        return "#";
+        String str = "R";
+
+        if (team.equals("black")){
+            str = str.toLowerCase();
+        }
+
+        return str;
     } 
 }

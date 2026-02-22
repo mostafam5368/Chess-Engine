@@ -15,14 +15,12 @@ public class Chess
         reader = new Scanner(System.in);
         fillBoard();
 
-        Queen q1 = new Queen("white", 3, 0);
-        Bishop b1 = new Bishop("black", 4, 4);
-        Rook r1 = new Rook("black", 0, 5);
+        final King white = new King("white", 7, 3);
+        final King black = new King("black", 4, 3);
 
         while (true){
             printBoard();
-            System.out.println(board[1][7].foundBy);
-            prompt(q1);
+            prompt(white);
         }
     }
 
@@ -59,6 +57,8 @@ public class Chess
 
         } while (!piece.legalMove(x, y));
 
-        piece.move(x, y);
+        if (!piece.move(x,y)){
+            prompt(piece);
+        }
     }
 }

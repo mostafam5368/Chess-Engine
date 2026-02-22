@@ -2,8 +2,8 @@ package piece;
 
 public final class Knight extends Piece
 {
-    public Knight(String t, int r, int c){
-        super(t, r, c);
+    public Knight(King k, int r, int c){
+        super(k, r, c);
         reach = 1;
         
         moveset = new int[][]{
@@ -16,6 +16,12 @@ public final class Knight extends Piece
     }
     
     public String toString(){
-        return "?";
+        String str = "N";
+
+        if (team.equals("black")){
+            str = str.toLowerCase();
+        }
+
+        return str;
     }   
 }

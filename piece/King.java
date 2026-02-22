@@ -1,5 +1,7 @@
 package piece;
 
+import main.Chess;
+
 public final class King extends Piece
 {
     public King(String t, int r, int c){
@@ -14,8 +16,19 @@ public final class King extends Piece
         paths = new Path[moveset.length];
         buildPaths();
     }
+
+    @Override
+    public boolean inCheck(){
+        return isCapturable();
+    }
     
     public String toString(){
-        return "+";
+        String str = "K";
+
+        if (team.equals("black")){
+            str = str.toLowerCase();
+        }
+
+        return str;
     }
 }
