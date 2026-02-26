@@ -16,14 +16,18 @@ public abstract class Piece extends Entity
     // Royal
     public Piece(String t, int r, int c){
         super(t, r, c);
-        capture(Chess.board[r][c]);
+        place();
     }
     
     // Non-Royal
     public Piece(King k, int r, int c){
         super(k.team, r, c);
         king = k;
-        capture(Chess.board[r][c]);
+        place();
+    }
+
+    public void place(){
+        capture(Chess.board[row][col]);
     }
     
     
@@ -47,23 +51,18 @@ public abstract class Piece extends Entity
             build(row + direction[1], col + direction[0]);
         }
 
-        
+
         /*
             The purpose of this method is to traverse the board in one direction and collect Entities.
             Building stops once traversing off the board or reaching the first blocker.
         */
         public void build(int x, int y){
-            while (contents.size() < maxSize){
-                if (!legalBounds(x, y)){
+            while (contents.size() < maxSize && !isBlocked()){
+                if (!Chess.legalBounds(x, y)){
                     return;
                 }
 
-                Entity current = Chess.board[x][y];
-                buildTo(current);
-
-                if (current.isOccupied()){
-                    return;
-                }
+                buildTo(Chess.board[x][y]);
 
                 x += direction[1];
                 y += direction[0];
@@ -83,6 +82,14 @@ public abstract class Piece extends Entity
             return !isAlly(target) && captureRule.isInstance(target);
         }
 
+        // The purpose of this method is to determine if the end of a Path is a blocker
+        public boolean isBlocked(){
+            if (contents.isEmpty()){
+                return false;
+            }
+
+            return contents.get(contents.size() - 1).isOccupied();
+        }
 
         // The purpose of this method is to grow or shrink a Path to reflect what is currently on the board.
         public void refreshAt(Entity e){
@@ -128,15 +135,6 @@ public abstract class Piece extends Entity
         for (Path p: paths){
             p.clearVisibility();
         }
-    }
-
-    // The purpose of this method is to determine if a move is legal without respect to check.
-    public boolean legalMove(int x, int y){
-        if (!legalBounds(x, y)){
-            return false;
-        }
-
-        return Chess.board[x][y].seenBy.getOrDefault(this, false);
     }
 
     // The purpose of this method is to determine if the king can be captured.

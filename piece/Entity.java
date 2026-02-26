@@ -8,8 +8,8 @@ import java.util.HashSet;
 public abstract class Entity
 {
     // Instance Variables
-    protected String team;
-    protected int row, col;
+    public String team;
+    public int row, col;
     public HashMap<Piece, Boolean> seenBy;
 
 
@@ -23,10 +23,6 @@ public abstract class Entity
 
 
     // Boolean Methods
-    public boolean legalBounds(int x, int y){
-        return (x < Chess.board.length && x >= 0) && (y < Chess.board[0].length && y >= 0);
-    }
-
     public boolean isOccupied(){
         return this instanceof Piece;
     }
@@ -54,7 +50,7 @@ public abstract class Entity
     */
     public void notifyBoard(){
         HashSet<Piece> copy = new HashSet<>(seenBy.keySet());
-
+        
         for (Piece piece: copy){
             piece.seenEntities.get(this).refreshAt(this);
         }

@@ -10,7 +10,8 @@ public final class Pawn extends Piece
         super(k, r, c);
 
         reach = 2;
-        forward = -1;
+        if (team.equals("white")) forward = -1;
+        else forward = 1;
         
         moveset = new int[][]{
             {0, forward},{-1, forward},{1, forward}
@@ -23,7 +24,6 @@ public final class Pawn extends Piece
     @Override
     public void buildPaths(){
         seenEntities = new HashMap<>();
-        
         paths[0] = new Path(moveset[0], reach, Tile.class);
         paths[1] = new Path(moveset[1], 1, Piece.class);
         paths[2] = new Path(moveset[2], 1, Piece.class);
