@@ -16,20 +16,13 @@ public abstract class Piece extends Entity
     // Royal
     public Piece(String t, int r, int c){
         super(t, r, c);
-        place();
     }
     
     // Non-Royal
     public Piece(King k, int r, int c){
         super(k.team, r, c);
         king = k;
-        place();
     }
-
-    public void place(){
-        capture(Chess.board[row][col]);
-    }
-    
     
     // This class collects Entities in a direction on the board.
     public class Path {
@@ -147,17 +140,11 @@ public abstract class Piece extends Entity
         super.removeFromBoard();
         blind();
     }
-    
-    /*
-        The purpose of this method is to complete a capture on a board.
-        Pieces which previously saw the target Entity are notified.
-    */
-    public void capture(Entity target){
-        row = target.row;
-        col = target.col;
 
-        Chess.board[row][col] = this;
-        target.removeFromBoard();
+    @Override
+    public void place(){
+        super.place();
+        buildPaths();
     }
     
     /*
@@ -168,12 +155,15 @@ public abstract class Piece extends Entity
         int startingRow = row;
         int startingCol = col;
 
-        Chess.board[row][col] = new Tile(row, col);
-        removeFromBoard();
+        new Tile(row, col).place();
+
+        Entity target = Chess.board[x][y];
         capture(Chess.board[x][y]);
 
         if (inCheck()){
-            move(startingRow, startingCol);
+            target.place();
+            capture(Chess.board[startingRow][startingCol]);
+            buildPaths();
             return false;
         }
 

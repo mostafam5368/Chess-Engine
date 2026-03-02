@@ -12,7 +12,7 @@ public final class King extends Piece
         };
         
         paths = new Path[moveset.length];
-        buildPaths();
+        place();
     }
 
     @Override

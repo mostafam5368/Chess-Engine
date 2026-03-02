@@ -34,6 +34,23 @@ public abstract class Entity
     public boolean isCapturable(){
         return seenBy.containsValue(true);
     }
+
+    /*
+        The purpose of this method is to complete a capture on a board.
+        Pieces which previously saw the target Entity are notified.
+    */
+    public void capture(Entity target){
+        row = target.row;
+        col = target.col;
+
+        Chess.board[row][col] = this;
+        target.removeFromBoard();
+    }
+
+    // The purpose of this method is to register the Entity on the board in the assigned location.
+    public void place(){
+        capture(Chess.board[row][col]);
+    }
     
     /*
         The purpose of this method is to remove an Entity from the board in the case of a move or capture.

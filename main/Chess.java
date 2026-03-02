@@ -17,15 +17,16 @@ public class Chess
         fillBoard();
 
         final King white = new King("white", 7, 4);
-        // final King black = new King("black", 0, 4);
+        final King black = new King("black", 0, 4);
 
-        Queen q1 = new Queen(white, 4, 6);
-        Rook r1 = new Rook(white, 0, 0);
-        Pawn p1 = new Pawn(white, 6, 5);
+        // Queen q1 = new Queen(white, 6, 5);
+        Bishop b1 = new Bishop(black, 4, 7);
+        
         
         while (true){
             System.out.println();
             printBoard();
+            System.out.println(b1.paths[2].contents);
             System.out.print("Your move: ");
             prompt(white);
         }
@@ -105,10 +106,10 @@ public class Chess
         int x, y = 0;
         Piece toMove;
 
-        do{
+        do {
             String move;
-
-            do{
+ 
+            do {
                 move = reader.nextLine();
 
                 while (move.length() < 2){
@@ -132,6 +133,7 @@ public class Chess
         } while (!board[x][y].seenBy.getOrDefault(toMove, false));
 
         if (!toMove.move(x, y)){
+            System.out.println("Invalid move.");
             prompt(player);
         }
     }

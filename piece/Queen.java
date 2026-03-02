@@ -13,7 +13,7 @@ public final class Queen extends Piece
         };
         
         paths = new Path[moveset.length];
-        buildPaths();
+        place();
     }
     
     public String toString(){

@@ -12,7 +12,7 @@ public final class Rook extends Piece
         };
         
         paths = new Path[moveset.length];
-        buildPaths();
+        place();
     }
     
     public String toString(){

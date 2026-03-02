@@ -18,7 +18,7 @@ public final class Pawn extends Piece
         };
         
         paths = new Path[moveset.length];
-        buildPaths();
+        place();
     }
 
     @Override
