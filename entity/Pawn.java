@@ -1,13 +1,17 @@
 package entity;
 
+import game.Chess;
+
 import java.util.HashMap;
 
 public final class Pawn extends Piece
 {
     private int forward;
+    private int startingRow;
 
     public Pawn(King k, int r, int c){
         super(k, r, c);
+        material = 1;
 
         reach = 2;
         if (team.equals("white")) forward = -1;
@@ -16,17 +20,16 @@ public final class Pawn extends Piece
         moveset = new int[][]{
             {0, forward},{-1, forward},{1, forward}
         };
-        
-        paths = new Path[moveset.length];
-        place();
+
+        startingRow = r;
     }
 
     @Override
     public void buildPaths(){
         seenEntities = new HashMap<>();
-        paths[0] = new Path(moveset[0], reach, Tile.class);
-        paths[1] = new Path(moveset[1], 1, Piece.class);
-        paths[2] = new Path(moveset[2], 1, Piece.class);
+        new Path(moveset[0], reach, Tile.class);
+        new Path(moveset[1], 1, Piece.class);
+        new Path(moveset[2], 1, Piece.class);
     }
     
     @Override
@@ -36,12 +39,44 @@ public final class Pawn extends Piece
         if (output){
             if (reach > 1){
                 reach = 1;
-                paths[0].clearVisibility();
-                paths[0] = new Path(moveset[0], reach, Tile.class);
+                blind();
+                buildPaths();
+            }
+
+            if (row == Chess.board.length + (startingRow * forward) - 2){
+                // 9 - 6 - 2
+                promote();
             }
         }
 
         return output;
+    }
+
+    private void promote(){
+        System.out.println("Promote to:");
+        System.out.println("1. Queen\t2. Rook");
+        System.out.println("3. Knight\t4. Bishop");
+
+        int promotion = Chess.reader.nextInt();
+        while (promotion < 1 && promotion > 4){
+            promotion = Chess.reader.nextInt();
+        }
+
+        switch (promotion){
+            case 1:
+                new Queen(king, row, col).place();
+                break;
+            case 2:
+                new Rook(king, row, col).place();
+                break;
+            case 3:
+                new Knight(king, row, col).place();
+                break;
+            case 4:
+                new Bishop(king, row, col).place();
+                break;
+            default: break; 
+        }
     }
     
     public String toString(){

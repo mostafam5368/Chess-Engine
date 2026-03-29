@@ -4,13 +4,12 @@ public final class Rook extends Piece
 {
     public Rook(King k, int r, int c){
         super(k, r, c);
+        material = 5;
         reach = INF_REACH;
         
         moveset = new int[][]{
             {0,-1},{1,0},{0,1},{-1,0}
         };
-        
-        paths = new Path[moveset.length];
     }
     
     public String toString(){

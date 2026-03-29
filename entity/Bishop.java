@@ -4,13 +4,12 @@ public final class Bishop extends Piece
 {
     public Bishop(King k, int r, int c){
         super(k, r, c);
+        material = 3;
         reach = INF_REACH;
         
         moveset = new int[][]{
             {1,-1},{1,1},{-1,1},{-1,-1}
         };
-        
-        paths = new Path[moveset.length];
     }
     
     public String toString(){

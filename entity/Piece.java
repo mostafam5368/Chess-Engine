@@ -1,18 +1,18 @@
 package entity;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import game.Chess;
 
 // This class represents one chess piece
 public abstract class Piece extends Entity
 {
-    public static int INF_REACH = Math.max(Chess.board.length - 1, Chess.board[0].length - 1);
+    protected static int INF_REACH = Math.max(Chess.board.length - 1, Chess.board[0].length - 1);
 
     protected int reach;
     protected int[][] moveset;
     protected King king;
-    public Path[] paths;
     public HashMap<Entity, Path> seenEntities;
 
     // Royal
@@ -27,18 +27,18 @@ public abstract class Piece extends Entity
     }
     
     // This class collects Entities in a direction on the board.
-    public class Path {
+    protected class Path {
         private int[] direction;
         private int maxSize;
         private Class<? extends Entity> captureRule;
         public ArrayList<Entity> contents;
 
 
-        public Path(int[] dir, int m){
+        protected Path(int[] dir, int m){
             this(dir, m, Entity.class);
         }
 
-        public Path(int[] dir, int m, Class<? extends Entity> cr){
+        protected Path(int[] dir, int m, Class<? extends Entity> cr){
             direction = dir;
             maxSize = m;
             captureRule = cr;
@@ -51,13 +51,13 @@ public abstract class Piece extends Entity
             The purpose of this method is to traverse the board in one direction and collect Entities.
             Building stops once traversing off the board or reaching the first blocker.
         */
-        public void build(int x, int y){
+        private void build(int x, int y){
             while (!isBlocked() && contents.size() < maxSize){
                 if (!Chess.legalBounds(x, y)){
                     return;
                 }
 
-                buildTo(Chess.board[x][y]);
+                stepTo(Chess.board[x][y]);
 
                 x += direction[1];
                 y += direction[0];
@@ -65,7 +65,7 @@ public abstract class Piece extends Entity
         }
 
         // The purpose of this method is to represent one step in Path building.
-        private void buildTo(Entity target){
+        private void stepTo(Entity target){
             contents.add(target);
             seenEntities.put(target, this);
             target.seenBy.put(Piece.this, canCapture(target));
@@ -77,7 +77,7 @@ public abstract class Piece extends Entity
             return !isAlly(target) && captureRule.isInstance(target);
         }
 
-        // The purpose of this method is to determine if the end of a Path is a blocker
+        // The purpose of this method is to determine if the end of a Path is a blocker.
         private boolean isBlocked(){
             if (contents.isEmpty()){
                 return false;
@@ -87,7 +87,7 @@ public abstract class Piece extends Entity
         }
 
         // The purpose of this method is to grow or shrink a Path to reflect what is currently on the board.
-        public void refreshAt(Entity e){
+        protected void refreshAt(Entity e){
             Entity boardState = Chess.board[e.row][e.col];
             int entityIndex = contents.indexOf(e);
 
@@ -102,13 +102,13 @@ public abstract class Piece extends Entity
                     contents.remove(i);
                 }
             }
-            else{
+            else {
                 build(boardState.row + direction[1], boardState.col + direction[0]);
             }
         }
 
         // The purpose of this method is to remove move legality from all Entities found on this Path.
-        public void clearVisibility(){
+        protected void clearVisibility(){
             for (Entity e: contents){
                 e.seenBy.remove(Piece.this);
             }
@@ -117,17 +117,17 @@ public abstract class Piece extends Entity
     
 
     // The purpose of this method is to build Paths in every direction the Piece is allowed.
-    public void buildPaths(){
+    protected void buildPaths(){
         seenEntities = new HashMap<>();
 
-        for (int i = 0; i < moveset.length; i++){
-            paths[i] = new Path(moveset[i], reach);
+        for (int[] dir: moveset){
+            new Path(dir, reach);
         }
     }
 
     // The purpose of this method is to remove move legality from all Entities found on Paths.
-    public void blind(){
-        for (Path p: paths){
+    protected void blind(){
+        for (Path p: new HashSet<Path>(seenEntities.values())){
             p.clearVisibility();
         }
     }

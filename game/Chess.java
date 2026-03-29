@@ -1,36 +1,33 @@
 package game;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
-
 import entity.*;
 
 public class Chess
 {
     public static Entity[][] board = new Entity[8][8];
+    public static Scanner reader;
 
-    final static King white = new King("white", 7, 4);
-    final static King black = new King("black", 0, 4);
-
-    private static Scanner reader;
+    private static King white = new King("white", 7, 4);
+    private static King black = new King("black", 0, 4);
 
     public static void play(){
         reader = new Scanner(System.in);
+        // printWelcomeScreen();
         fillBoard();
 
-        // Bishop b1 = new Bishop(white, 2, 2);
-        // b1.place();
-        // Bishop b2 = new Bishop(white, 4, 2);
-        // b2.place();
-        // Bishop b3 = new Bishop(white, 2, 4);
-        // b3.place();
-        
+        new Pawn(white, board.length - 2, 4).place();
+
         while (true){
-            System.out.println();
             printBoard();
-            System.out.print("Your move: ");
             prompt(white);
+            // printBoard();
+            // prompt(black);
         }
+    }
+
+    public static boolean legalBounds(int x, int y){
+        return (x < board.length && x >= 0) && (y < board[0].length && y >= 0);
     }
 
     private static void fillBoard(){
@@ -39,58 +36,36 @@ public class Chess
                 board[i][j] = new Tile(i, j);
             }
         }
+        
+        // white.place();
+        // black.place();
 
-        white.place();
-        black.place();
+        // for (int i = 0; i < board[6].length; i++){
+        //     new Pawn(white, board.length - 2, i).place();
+        //     new Pawn(black, 1, i).place();
+        // }
 
-        for (int i = 0; i < board[6].length; i++){
-            Pawn pawn = new Pawn(white, 6, i);
-            pawn.place();
-        }
+        // new Rook(white, board.length - 1, 0).place();
+        // new Rook(black, 0, 0).place();
 
-        for (int i = 0; i < board[1].length; i++){
-            Pawn pawn = new Pawn(black, 1, i);
-            pawn.place();
-        }
+        // new Knight(white, board.length - 1, 1).place();
+        // new Knight(black, 0, 1).place();
 
-        Rook r1 = new Rook(white, 7, 0);
-        r1.place();
-        Rook r2 = new Rook(black, 0, 0);
-        r2.place();
+        // new Bishop(white, board.length - 1, 2).place();
+        // new Bishop(black, 0, 2).place();
 
-        Knight n1 = new Knight(white, 7, 1);
-        n1.place();
-        Knight n2 = new Knight(black, 0, 1);
-        n2.place();
+        // new Queen(white, board.length - 1, 3).place();
+        // new Queen(black, 0, 3).place();
 
-        Bishop b1 = new Bishop(white, 7, 2);
-        b1.place();
-        Bishop b2 = new Bishop(black, 0, 2);
-        b2.place();
+        // new Bishop(white, board.length - 1, 5).place();
+        // new Bishop(black, 0, 5).place();
 
-        Queen q1 = new Queen(white, 7, 3);
-        q1.place();
-        Queen q2 = new Queen(black, 0, 3);
-        q2.place();
+        // new Knight(white, board.length - 1, 6).place();
+        // new Knight(black, 0, 6).place();
 
-        Bishop b3 = new Bishop(white, 7, 5);
-        b3.place();
-        Bishop b4 = new Bishop(black, 0, 5);
-        b4.place();
-
-        Knight n3 = new Knight(white, 7, 6);
-        n3.place();
-        Knight n4 = new Knight(black, 0, 6);
-        n4.place();
-
-        Rook r3 = new Rook(white, 7, 7);
-        r3.place();
-        Rook r4 = new Rook(black, 0, 7);
-        r4.place();
-
-        /*
-            
-        */
+        // new Rook(white, board.length - 1, 7).place();
+        // new Rook(black, 0, 7).place();
+        
 
         /*
             White: pawn at board[6][6] moves to board[5][6]
@@ -107,14 +82,34 @@ public class Chess
          */
     }
 
+    private static void printWelcomeScreen(){
+        System.out.println("CHESS GAME");
+        System.out.println("1. All rules of chess apply.");
+        System.out.println("2. Enter moves using chess notation (ex. Qf3).");
+        System.out.println("3. Disambiguate moves by file, rank, or both when necessary (ex. Nbd4).");
+        System.out.println("4. Castle by entering a king move in a legal position (ex. Kg1).");
+        System.out.println("5. Promote using the pop-up menu when pawn reaches last rank.");
+        System.out.println();
+        System.out.println("Enter any key to continue:");
+        reader.nextLine();
+    }
+
     private static void printBoard(){
+        System.out.println();
+
         for (int i = 0; i < board.length; i++){
-            System.out.println(board.length - i + " " + Arrays.toString(board[i]));
+            System.out.print(board.length - i);
+
+            for (Entity e: board[i]){
+                System.out.print("  " + e);
+            }
+
+            System.out.println();
         }
 
         System.out.print(" ");
 
-        for (int i = 97; i < 97 + board.length; i++){
+        for (int i = 'a'; i < 'a' + board[0].length; i++){
             System.out.print("  "+ (char)i);
         }
 
@@ -123,67 +118,84 @@ public class Chess
 
     private static void prompt(King player){
         int x, y = 0;
-        Piece toMove = null;
-
-        
         String move;
+        ArrayList<Piece> potentials;
 
         do {
-            move = reader.nextLine();
+            System.out.print(player.team.toUpperCase() + " move: ");
 
-            while (move.length() < 2){
+            do {
                 move = reader.nextLine();
+
+                while (move.length() < 2){
+                    move = reader.nextLine();
+                }
+
+                x = 56 - move.charAt(move.length() - 1);
+                y = move.charAt(move.length() - 2) - 97;
+            } while (!legalBounds(x, y));
+
+            Class<? extends Piece> type;
+
+            switch (move.charAt(0)){
+                case 'Q':
+                    type = Queen.class;
+                    break;
+                case 'R':
+                    type = Rook.class;
+                    break;
+                case 'N':
+                    type = Knight.class;
+                    break;
+                case 'B':
+                    type = Bishop.class;
+                    break;
+                case 'K':
+                    type = King.class;
+                    break;
+                default:
+                    type = Pawn.class;
+                    break;
             }
 
-            x = 56 - move.charAt(move.length() - 1);
-            y = move.charAt(move.length() - 2) - 97;
-        } while (!legalBounds(x, y));
+            String given;
 
-        Class<? extends Piece> type;
-
-        switch (move.charAt(0)){
-            case 'Q':
-                type = Queen.class;
-                break;
-            case 'R':
-                type = Rook.class;
-                break;
-            case 'N':
-                type = Knight.class;
-                break;
-            case 'B':
-                type = Bishop.class;
-                break;
-            case 'K':
-                type = King.class;
-                break;
-            default:
-                type = Pawn.class;
-                break;
-        }
-
-        String given;
-
-        if (move.length() > 2){
-            given = move.substring(1, move.length() - 2);
-        }
-        else{
-            given = move.substring(0, move.length() - 2);
-        }
-        
-        ArrayList<Piece> potentials = board[x][y].disambiguate(player.team, type, given);
-
-        if (potentials.size() > 1 || potentials.isEmpty()){
-            prompt(player);
-            return;
-        }
+            if (type == Pawn.class){
+                given = move.substring(0, move.length() - 2);
+            }
+            else {
+                given = move.substring(1, move.length() - 2);
+            }
+            
+            potentials = disambiguate(board[x][y].capturableBy(player.team, type), given);
+        } while (potentials.size() > 1 || potentials.isEmpty());
 
         if (!potentials.get(0).move(x, y)){
             prompt(player);
         }
     }
 
-    public static boolean legalBounds(int x, int y){
-        return (x < board.length && x >= 0) && (y < board[0].length && y >= 0);
+    private static ArrayList<Piece> disambiguate(ArrayList<Piece> potentials, String disambig){
+        ArrayList<Piece> output = new ArrayList<>();
+        int[] arr = new int[]{'.', '.'};
+
+        for (int i = 0; i < disambig.length(); i++){
+            char current = disambig.charAt(i);
+
+            if (Character.isLetter(current)){
+                arr[0] = current - 'a';
+            }
+            if (Character.isDigit(current)){
+                arr[1] = '8' - current;
+            }
+        }
+
+        for (Piece piece: potentials){
+            if (piece.onCol(arr[0]) && piece.onRow(arr[1])){
+                output.add(piece);
+            }
+        }
+
+        return output;
     }
 }
