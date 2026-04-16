@@ -63,7 +63,7 @@ public final class King extends Piece
     public boolean legalCastle(Rook r){
         int rightOrLeft = -(col - r.col) / Math.abs(col - r.col);
 
-        for (int i = col + rightOrLeft; i > 1 && i < Chess.board[row].length - 1; i += rightOrLeft){
+        for (int i = col + rightOrLeft; i > col - 3 && i < col + 2; i += rightOrLeft){
             // fix opponent
             if (Chess.board[row][i].capturableBy("black", Piece.class).size() > 0){
                 return false;

@@ -45,31 +45,31 @@ public class Chess
         white.place();
         black.place();
 
-        for (int i = 0; i < board[6].length; i++){
-            new Pawn(white, board.length - 2, i).place();
-            new Pawn(black, 1, i).place();
-        }
+        // for (int i = 0; i < board[6].length; i++){
+        //     new Pawn(white, board.length - 2, i).place();
+        //     new Pawn(black, 1, i).place();
+        // }
 
         new Rook(white, board.length - 1, 0).place();
-        new Rook(black, 0, 0).place();
+        // new Rook(black, 0, 0).place();
 
-        new Knight(white, board.length - 1, 1).place();
-        new Knight(black, 0, 1).place();
+        // new Knight(white, board.length - 1, 1).place();
+        // new Knight(black, 0, 1).place();
 
-        new Bishop(white, board.length - 1, 2).place();
-        new Bishop(black, 0, 2).place();
+        // new Bishop(white, board.length - 1, 2).place();
+        // new Bishop(black, 0, 2).place();
 
-        new Queen(white, board.length - 1, 3).place();
-        new Queen(black, 0, 3).place();
+        // new Queen(white, board.length - 1, 3).place();
+        // new Queen(black, 0, 3).place();
 
-        new Bishop(white, board.length - 1, 5).place();
-        new Bishop(black, 0, 5).place();
+        // new Bishop(white, board.length - 1, 5).place();
+        // new Bishop(black, 0, 5).place();
 
-        new Knight(white, board.length - 1, 6).place();
-        new Knight(black, 0, 6).place();
+        // new Knight(white, board.length - 1, 6).place();
+        // new Knight(black, 0, 6).place();
 
         new Rook(white, board.length - 1, 7).place();
-        new Rook(black, 0, 7).place();
+        // new Rook(black, 0, 7).place();
 
 
         /*
@@ -209,7 +209,7 @@ public class Chess
         }
 
         for (Piece piece: potentials){
-            if (piece.onCol(arr[0]) && piece.onRow(arr[1])){
+            if ((arr[0] == '.' || piece.onCol(arr[0])) && (arr[1] == '.' || piece.onRow(arr[1]))){
                 output.add(piece);
             }
         }

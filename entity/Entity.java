@@ -38,11 +38,9 @@ public abstract class Entity
         return seenBy.containsValue(true);
     }
     public boolean onCol(int c){
-        if (c == '.') return true;
         return col == c;
     }
     public boolean onRow(int r){
-        if (r == '.') return true;
         return row == r;
     }
 

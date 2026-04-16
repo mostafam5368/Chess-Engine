@@ -1,5 +1,7 @@
 package entity;
 
+import game.Chess;
+
 public final class Rook extends Piece
 {
     protected boolean hasMoved;
@@ -21,7 +23,11 @@ public final class Rook extends Piece
         boolean completed = super.move(x, y);
 
         if (completed){
-            hasMoved = true;
+            if (!hasMoved){
+                int rightOrLeft = -(king.col - col) / Math.abs(king.col - col);
+                Chess.board[king.row][king.col + rightOrLeft * 2].seenBy.replace(king, false);
+                hasMoved = true;
+            }
         }
 
         return completed;
