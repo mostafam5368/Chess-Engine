@@ -18,16 +18,18 @@ public abstract class Piece extends Entity
     // Royal
     public Piece(String t, int r, int c){
         super(t, r, c);
+        seenEntities = new HashMap<>();
     }
     
     // Non-Royal
     public Piece(King k, int r, int c){
         super(k.team, r, c);
         king = k;
+        seenEntities = new HashMap<>();
     }
     
     // This class collects Entities in a direction on the board.
-    protected class Path {
+    public class Path {
         private int[] direction;
         private int maxSize;
         private Class<? extends Entity> captureRule;
@@ -51,7 +53,7 @@ public abstract class Piece extends Entity
             The purpose of this method is to traverse the board in one direction and collect Entities.
             Building stops once traversing off the board or reaching the first blocker.
         */
-        private void build(int x, int y){
+        protected void build(int x, int y){
             while (!isBlocked() && contents.size() < maxSize){
                 if (!Chess.legalBounds(x, y)){
                     return;
@@ -65,7 +67,7 @@ public abstract class Piece extends Entity
         }
 
         // The purpose of this method is to represent one step in Path building.
-        private void stepTo(Entity target){
+        protected void stepTo(Entity target){
             contents.add(target);
             seenEntities.put(target, this);
             target.seenBy.put(Piece.this, canCapture(target));
@@ -156,6 +158,9 @@ public abstract class Piece extends Entity
             buildPaths();
             return false;
         }
+
+        Chess.materials.replace(team, Chess.materials.getOrDefault(team, 0) + target.materialValue);
+        Chess.materials.replace(target.team, Chess.materials.getOrDefault(target.team, 0) - target.materialValue);
 
         buildPaths();
         return true;

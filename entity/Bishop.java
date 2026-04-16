@@ -4,7 +4,7 @@ public final class Bishop extends Piece
 {
     public Bishop(King k, int r, int c){
         super(k, r, c);
-        material = 3;
+        materialValue = 3;
         reach = INF_REACH;
         
         moveset = new int[][]{
@@ -15,7 +15,6 @@ public final class Bishop extends Piece
     public String toString(){
         String str = "B";
         if (team.equals("black")) str = str.toLowerCase();
-
         return str;
     }
 }

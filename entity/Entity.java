@@ -1,4 +1,6 @@
 package entity;
+import entity.Piece.Path;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +15,7 @@ public abstract class Entity
     public String team;
     public int row, col;
     public HashMap<Piece, Boolean> seenBy;
-    protected int material;
+    protected int materialValue;
 
 
     // Constructors
@@ -74,7 +76,8 @@ public abstract class Entity
         HashSet<Piece> copy = new HashSet<>(seenBy.keySet());
         
         for (Piece piece: copy){
-            piece.seenEntities.get(this).refreshAt(this);
+            Path path = piece.seenEntities.get(this);
+            if (path != null) path.refreshAt(this);
         }
     }
 
@@ -87,6 +90,10 @@ public abstract class Entity
             if (entry.getValue()){
                 if (type.isInstance(entry.getKey()) && entry.getKey().team.equals(t)){
                     output.add(entry.getKey());
+
+                    if (type == King.class){
+                        break;
+                    }
                 }
             }
         }

@@ -4,7 +4,7 @@ public final class Knight extends Piece
 {
     public Knight(King k, int r, int c){
         super(k, r, c);
-        material = 3;
+        materialValue = 3;
         reach = 1;
         
         moveset = new int[][]{
@@ -16,7 +16,6 @@ public final class Knight extends Piece
     public String toString(){
         String str = "N";
         if (team.equals("black")) str = str.toLowerCase();
-
         return str;
     }   
 }

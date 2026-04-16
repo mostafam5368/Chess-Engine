@@ -4,7 +4,7 @@ public final class Queen extends Piece
 {
     public Queen(King k, int r, int c){
         super(k, r, c);
-        material = 9;
+        materialValue = 9;
         reach = INF_REACH;
         
         moveset = new int[][]{
@@ -16,7 +16,6 @@ public final class Queen extends Piece
     public String toString(){
         String str = "Q";
         if (team.equals("black")) str = str.toLowerCase();
-
         return str;
     }
 }

@@ -1,5 +1,6 @@
 package game;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import entity.*;
 
@@ -8,15 +9,19 @@ public class Chess
     public static Entity[][] board = new Entity[8][8];
     public static Scanner reader;
 
-    private static King white = new King("white", 7, 4);
-    private static King black = new King("black", 0, 4);
+    public static King white = new King("white", 7, 4);
+    public static King black = new King("black", 0, 4);
+
+    public static HashMap<String, Integer> materials = new HashMap<>();
 
     public static void play(){
         reader = new Scanner(System.in);
+
+        materials.put(white.team, 0);
+        materials.put(black.team, 0);
+
         // printWelcomeScreen();
         fillBoard();
-
-        new Pawn(white, board.length - 2, 4).place();
 
         while (true){
             printBoard();
@@ -36,36 +41,36 @@ public class Chess
                 board[i][j] = new Tile(i, j);
             }
         }
-        
-        // white.place();
-        // black.place();
 
-        // for (int i = 0; i < board[6].length; i++){
-        //     new Pawn(white, board.length - 2, i).place();
-        //     new Pawn(black, 1, i).place();
-        // }
+        white.place();
+        black.place();
 
-        // new Rook(white, board.length - 1, 0).place();
-        // new Rook(black, 0, 0).place();
+        for (int i = 0; i < board[6].length; i++){
+            new Pawn(white, board.length - 2, i).place();
+            new Pawn(black, 1, i).place();
+        }
 
-        // new Knight(white, board.length - 1, 1).place();
-        // new Knight(black, 0, 1).place();
+        new Rook(white, board.length - 1, 0).place();
+        new Rook(black, 0, 0).place();
 
-        // new Bishop(white, board.length - 1, 2).place();
-        // new Bishop(black, 0, 2).place();
+        new Knight(white, board.length - 1, 1).place();
+        new Knight(black, 0, 1).place();
 
-        // new Queen(white, board.length - 1, 3).place();
-        // new Queen(black, 0, 3).place();
+        new Bishop(white, board.length - 1, 2).place();
+        new Bishop(black, 0, 2).place();
 
-        // new Bishop(white, board.length - 1, 5).place();
-        // new Bishop(black, 0, 5).place();
+        new Queen(white, board.length - 1, 3).place();
+        new Queen(black, 0, 3).place();
 
-        // new Knight(white, board.length - 1, 6).place();
-        // new Knight(black, 0, 6).place();
+        new Bishop(white, board.length - 1, 5).place();
+        new Bishop(black, 0, 5).place();
 
-        // new Rook(white, board.length - 1, 7).place();
-        // new Rook(black, 0, 7).place();
-        
+        new Knight(white, board.length - 1, 6).place();
+        new Knight(black, 0, 6).place();
+
+        new Rook(white, board.length - 1, 7).place();
+        new Rook(black, 0, 7).place();
+
 
         /*
             White: pawn at board[6][6] moves to board[5][6]
@@ -97,6 +102,12 @@ public class Chess
     private static void printBoard(){
         System.out.println();
 
+        String blackMaterial = black.team.toUpperCase() + ": ";
+        if (materials.get(black.team) > 0) blackMaterial += "+" + materials.get(black.team);
+        else blackMaterial += "--";
+
+        System.out.println(blackMaterial);
+
         for (int i = 0; i < board.length; i++){
             System.out.print(board.length - i);
 
@@ -113,6 +124,13 @@ public class Chess
             System.out.print("  "+ (char)i);
         }
 
+        System.out.println();
+
+        String whiteMaterial = white.team.toUpperCase() + ": ";
+        if (materials.get(white.team) > 0) whiteMaterial += "+" + materials.get(white.team);
+        else whiteMaterial += "--";
+
+        System.out.println(whiteMaterial);
         System.out.println();
     }
 
