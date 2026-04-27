@@ -2,6 +2,7 @@ package entity;
 
 import game.Chess;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public final class Pawn extends Piece
@@ -55,12 +56,59 @@ public final class Pawn extends Piece
     
     @Override
     public boolean move(int x, int y){
+        int startingRow = row;
         boolean completed = super.move(x, y);
 
-        if (row == promotionRow){
-            promote();
-        }
+        if (completed){
+            if (Math.abs(startingRow - x) == 2){
+                ArrayList<Pawn> enPassant = new ArrayList<>();
+                
+                if (col > 0){
+                    Entity left = Chess.board[row][col - 1];
 
+                    if (left instanceof Pawn && !isAlly(left)){
+                        enPassant.add((Pawn) left);
+                    }
+                }
+                
+                if (col < Chess.board[row].length - 1){
+                    Entity right = Chess.board[row][col + 1];
+
+                    if (right instanceof Pawn && !isAlly(right)){
+                        enPassant.add((Pawn) right);
+                    }
+                }
+
+                int rowBehind = row - forward;
+
+                // grant move access
+                for (Pawn pawn: enPassant){
+                    Chess.board[rowBehind][col].seenBy.put(pawn, true);
+                }
+
+                // prompt opponent
+                Chess.playRound(Chess.opponents.get(king));
+
+                if (enPassant.contains(Chess.board[rowBehind][col])){
+                    // remove pawn from board
+                    new Tile(row, col).place();
+                }
+                else {
+                    // remove move access
+                    for (Pawn pawn: enPassant){
+                        Chess.board[rowBehind][col].seenBy.remove(pawn);
+                    }
+                }
+
+                // complete round of prompting
+                Chess.playRound(king);
+            }
+
+            if (row == promotionRow){
+                promote();
+            }
+        }
+        
         return completed;
     }
 

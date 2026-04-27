@@ -13,6 +13,7 @@ public class Chess
     public static King black = new King("black", 0, 4);
 
     public static HashMap<String, Integer> materials = new HashMap<>();
+    public static HashMap<King, King> opponents = new HashMap<>();
 
     public static void play(){
         reader = new Scanner(System.in);
@@ -20,14 +21,26 @@ public class Chess
         materials.put(white.team, 0);
         materials.put(black.team, 0);
 
+        opponents.put(white, black);
+        opponents.put(black, white);
+
         // printWelcomeScreen();
         fillBoard();
 
+        // dummies
+        // new Pawn(white, 6, 0).place();
+        // new Pawn(black, 1, 0).place();
+
+        // new Pawn(black, 4, 5).place();
+        // new Pawn(black, 4, 3).place();
+        // new Pawn(white, 6, 4).place();
+
+        // new Queen(black, 5, 5).place();
+        // new Bishop(white, 7, 5).place();
+
         while (true){
-            printBoard();
-            prompt(white);
-            // printBoard();
-            // prompt(black);
+            playRound(white);
+            playRound(black);
         }
     }
 
@@ -99,6 +112,11 @@ public class Chess
         reader.nextLine();
     }
 
+    public static void playRound(King player){
+        printBoard();
+        prompt(player);
+    }
+
     private static void printBoard(){
         System.out.println();
 
@@ -140,9 +158,8 @@ public class Chess
         ArrayList<Piece> potentials;
 
         do {
-            System.out.print(player.team.toUpperCase() + " move: ");
-
             do {
+                System.out.print(player.team.toUpperCase() + " move: ");
                 move = reader.nextLine();
 
                 while (move.length() < 2){
