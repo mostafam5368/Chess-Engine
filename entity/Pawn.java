@@ -1,9 +1,6 @@
 package entity;
-
-import game.Chess;
-
 import java.util.ArrayList;
-import java.util.HashMap;
+import game.Chess;
 
 public final class Pawn extends Piece
 {
@@ -42,7 +39,7 @@ public final class Pawn extends Piece
 
     @Override
     public void buildPaths(){
-        seenEntities = new HashMap<>();
+        seenEntities.clear();
 
         for (int[] dir: moveset){
             if (dir[0] == 0){
@@ -79,29 +76,34 @@ public final class Pawn extends Piece
                     }
                 }
 
-                int rowBehind = row - forward;
+                if (enPassant.size() > 0){
+                    int rowBehind = row - forward;
 
-                // grant move access
-                for (Pawn pawn: enPassant){
-                    Chess.board[rowBehind][col].seenBy.put(pawn, true);
-                }
-
-                // prompt opponent
-                Chess.playRound(Chess.opponents.get(king));
-
-                if (enPassant.contains(Chess.board[rowBehind][col])){
-                    // remove pawn from board
-                    new Tile(row, col).place();
-                }
-                else {
-                    // remove move access
+                    // grant move access
                     for (Pawn pawn: enPassant){
-                        Chess.board[rowBehind][col].seenBy.remove(pawn);
+                        Chess.board[rowBehind][col].seenBy.put(pawn, true);
                     }
-                }
 
-                // complete round of prompting
-                Chess.playRound(king);
+                    // prompt opponent
+                    Chess.playRound(Chess.opponents.get(king));
+
+                    if (enPassant.contains(Chess.board[rowBehind][col])){
+                        // remove pawn from board
+                        new Tile(row, col).place();
+
+                        Chess.materials.replace(team, Chess.materials.getOrDefault(team, 0) - materialValue);
+                        Chess.materials.replace(Chess.opponents.get(king).team, Chess.materials.getOrDefault(Chess.opponents.get(king).team, 0) + materialValue);
+                    }
+                    else {
+                        // remove move access
+                        for (Pawn pawn: enPassant){
+                            Chess.board[rowBehind][col].seenBy.remove(pawn);
+                        }
+                    }
+
+                    // complete round of prompting
+                    Chess.playRound(king);
+                }
             }
 
             if (row == promotionRow){
@@ -113,7 +115,7 @@ public final class Pawn extends Piece
     }
 
     private void promote(){
-        System.out.println("Promote to:");
+        System.out.println("Promote:");
         System.out.println("1. Q\t2. R");
         System.out.println("3. N\t4. B");
 

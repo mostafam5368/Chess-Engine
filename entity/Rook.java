@@ -1,12 +1,10 @@
 package entity;
-
 import game.Chess;
 
 public final class Rook extends Piece
 {
     protected boolean hasMoved;
     private int kingCastle;
-    
 
     public Rook(King k, int r, int c){
         super(k, r, c);

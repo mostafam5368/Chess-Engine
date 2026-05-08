@@ -1,5 +1,4 @@
 package entity;
-
 import game.Chess;
 
 public final class King extends Piece
@@ -13,11 +12,6 @@ public final class King extends Piece
             {0,-1},{1,0},{0,1},{-1,0},
             {1,-1},{1,1},{-1,1},{-1,-1}
         };
-    }
-
-    @Override
-    public boolean inCheck(){
-        return isCapturable();
     }
 
     @Override
@@ -60,6 +54,11 @@ public final class King extends Piece
         return super.move(x, y);
     }
 
+    @Override
+    public boolean inCheck(){
+        return isCapturable();
+    }
+
     public boolean legalCastle(Rook r){
         int rightOrLeft = -(col - r.col) / Math.abs(col - r.col);
 
@@ -86,6 +85,21 @@ public final class King extends Piece
             r.move(row, col - 1);
         }
     }
+
+    // public boolean inCheckmate(){
+    //     if (!inCheck()) return false;
+
+    //     ArrayList<Piece> checkingPieces = capturableBy(Chess.opponents.get(this).team, Piece.class);
+    //     ArrayList<Path> checkingPaths = new ArrayList<>();
+
+    //     for (Piece piece: checkingPieces){
+    //         checkingPaths.add(piece.seenEntities.get(this));
+    //     }
+
+    //     boolean output = false;
+    //     // even if one path can't be blocked
+    //     return output;
+    // }
     
     public String toString(){
         String str = "K";

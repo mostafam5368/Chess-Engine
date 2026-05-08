@@ -1,11 +1,7 @@
 package entity;
-import entity.Piece.Path;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map.Entry;
-
 import game.Chess;
 
 // This class represents a Tile or Piece on the board.
@@ -37,6 +33,7 @@ public abstract class Entity
     public boolean isCapturable(){
         return seenBy.containsValue(true);
     }
+    
     public boolean onCol(int c){
         return col == c;
     }
@@ -65,17 +62,18 @@ public abstract class Entity
         Pieces that previously saw the Entity are notified.
     */
     public void removeFromBoard(){
-        notifyBoard();
+        notifyPieces();
         seenBy.clear();
     }
 
     // The purpose of this method is to refresh the paths in which this Entity was previously seen in the case of a move or capture.
-    public void notifyBoard(){
+    public void notifyPieces(){
         HashSet<Piece> copy = new HashSet<>(seenBy.keySet());
         
         for (Piece piece: copy){
-            Path path = piece.seenEntities.get(this);
-            if (path != null) path.refreshAt(this);
+            // Path path = piece.seenEntities.get(this);
+            // if (path != null) path.refreshAt(this);
+            piece.seenEntities.get(this).refreshAt(this);
         }
     }
 
@@ -84,14 +82,12 @@ public abstract class Entity
     public ArrayList<Piece> capturableBy(String t, Class<? extends Piece> type){
         ArrayList<Piece> output = new ArrayList<>();
 
-        for (Entry<Piece, Boolean> entry: seenBy.entrySet()){
-            if (entry.getValue()){
-                if (type.isInstance(entry.getKey()) && entry.getKey().team.equals(t)){
-                    output.add(entry.getKey());
+        for (Piece piece: seenBy.keySet()){
+            if (seenBy.get(piece)){
+                if (type.isInstance(piece) && piece.team.equals(t)){
+                    output.add(piece);
 
-                    if (type == King.class){
-                        break;
-                    }
+                    if (type == King.class) break;
                 }
             }
         }

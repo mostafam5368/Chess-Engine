@@ -1,5 +1,4 @@
 package main;
-
 import game.Chess;
 
 public class Main
