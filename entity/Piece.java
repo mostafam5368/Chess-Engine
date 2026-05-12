@@ -1,4 +1,5 @@
 package entity;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import game.Chess;
@@ -11,7 +12,7 @@ public abstract class Piece extends Entity
     protected int reach;
     protected int[][] moveset;
     protected King king;
-    public HashMap<Entity, Path> seenEntities;
+    protected HashMap<Entity, Path> seenEntities;
 
     // Royal
     public Piece(String t, int r, int c){
@@ -149,9 +150,6 @@ public abstract class Piece extends Entity
             return false;
         }
 
-        Chess.materials.replace(team, Chess.materials.getOrDefault(team, 0) + target.materialValue);
-        Chess.materials.replace(target.team, Chess.materials.getOrDefault(target.team, 0) - target.materialValue);
-
         buildPaths();
         return true;
     }
@@ -165,6 +163,10 @@ public abstract class Piece extends Entity
     public void place(){
         super.place();
         buildPaths();
+
+        if (materialValue > 0){
+            king.materialGained += materialValue;
+        }
     }
 
     @Override

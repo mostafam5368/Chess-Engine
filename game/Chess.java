@@ -14,7 +14,6 @@ public class Chess
     public static int turn = 0;
 
     public static HashMap<King, King> opponents = new HashMap<>();
-    public static HashMap<String, Integer> materials = new HashMap<>();
 
     public static void play(){
         reader = new Scanner(System.in);
@@ -22,12 +21,14 @@ public class Chess
         opponents.put(white, black);
         opponents.put(black, white);
 
-        materials.put(white.team, 0);
-        materials.put(black.team, 0);
-
         prepBoard();
         fillBoard();
 
+        // printBoard();
+        // reader.nextLine();
+        // System.out.print("\033[H\033[2J");
+        // System.out.flush();
+        
         while (true){
             playRound(white);
             playRound(black);
@@ -35,6 +36,10 @@ public class Chess
     }
 
     public static void playRound(King player){
+        // clear screen
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
         printBoard();
         turn++;
         prompt(player);
@@ -84,17 +89,17 @@ public class Chess
     }
 
     private static void printBoard(){
-        String blackMaterial = black.team.toUpperCase() + " ";
-        if (materials.get(black.team) > materials.get(white.team)) blackMaterial += "+" + materials.get(black.team);
+        String blackMaterial = "";
+        if (black.materialGained > white.materialGained) blackMaterial += "+" + (black.materialGained - white.materialGained);
         else blackMaterial += "--";
 
-        String whiteMaterial = white.team.toUpperCase() + " ";
-        if (materials.get(white.team) > materials.get(black.team)) whiteMaterial += "+" + materials.get(white.team);
+        String whiteMaterial = "";
+        if (white.materialGained > black.materialGained) whiteMaterial += "+" + (white.materialGained - black.materialGained);
         else whiteMaterial += "--";
 
         System.out.println();
-        String heightSpacing = "\n\n";
-        String widthSpacing = "        ";
+        String heightSpacing = "\n";
+        String widthSpacing = "     ";
 
         if (turn % 2 == 0){   // white view
             System.out.println(blackMaterial);
@@ -149,6 +154,8 @@ public class Chess
 
         do {
             do {
+                System.out.print("> ");
+
                 move = reader.nextLine();
 
                 while (move.length() < 2){
@@ -194,8 +201,14 @@ public class Chess
             potentials = disambiguate(board[x][y].capturableBy(player.team, type), given);
         } while (potentials.size() > 1 || potentials.isEmpty());
 
+        Entity target = Chess.board[x][y];
+
         if (!potentials.get(0).move(x, y)){
             prompt(player);
+        }
+
+        if (target.materialValue > 0){
+            player.materialGained += target.materialValue;
         }
     }
 

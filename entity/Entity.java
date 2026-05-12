@@ -10,8 +10,8 @@ public abstract class Entity
     // Instance Variables
     public String team;
     public int row, col;
-    public HashMap<Piece, Boolean> seenBy;
-    protected int materialValue;
+    protected HashMap<Piece, Boolean> seenBy;
+    public int materialValue;
 
 
     // Constructors
@@ -71,12 +71,13 @@ public abstract class Entity
         HashSet<Piece> copy = new HashSet<>(seenBy.keySet());
         
         for (Piece piece: copy){
-            // Path path = piece.seenEntities.get(this);
-            // if (path != null) path.refreshAt(this);
             piece.seenEntities.get(this).refreshAt(this);
         }
     }
 
+    public ArrayList<Piece> capturableBy(String t){
+        return capturableBy(t, Piece.class);
+    }
 
     // The purpose of this method is to collect the Pieces of the specified team and type that can capture this Entity.
     public ArrayList<Piece> capturableBy(String t, Class<? extends Piece> type){

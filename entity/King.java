@@ -1,12 +1,17 @@
 package entity;
+import java.io.IOException;
+import java.util.ArrayList;
 import game.Chess;
 
 public final class King extends Piece
 {
+    public int materialGained;
+
     public King(String t, int r, int c){
         super(t, r, c);
         materialValue = 0;
         reach = 1;
+        materialGained = 0;
         
         moveset = new int[][]{
             {0,-1},{1,0},{0,1},{-1,0},
@@ -54,11 +59,6 @@ public final class King extends Piece
         return super.move(x, y);
     }
 
-    @Override
-    public boolean inCheck(){
-        return isCapturable();
-    }
-
     public boolean legalCastle(Rook r){
         int rightOrLeft = -(col - r.col) / Math.abs(col - r.col);
 
@@ -86,20 +86,10 @@ public final class King extends Piece
         }
     }
 
-    // public boolean inCheckmate(){
-    //     if (!inCheck()) return false;
-
-    //     ArrayList<Piece> checkingPieces = capturableBy(Chess.opponents.get(this).team, Piece.class);
-    //     ArrayList<Path> checkingPaths = new ArrayList<>();
-
-    //     for (Piece piece: checkingPieces){
-    //         checkingPaths.add(piece.seenEntities.get(this));
-    //     }
-
-    //     boolean output = false;
-    //     // even if one path can't be blocked
-    //     return output;
-    // }
+    @Override
+    public boolean inCheck(){
+        return isCapturable();
+    }
     
     public String toString(){
         String str = "K";

@@ -1,4 +1,5 @@
 package entity;
+import java.io.IOException;
 import java.util.ArrayList;
 import game.Chess;
 
@@ -88,11 +89,9 @@ public final class Pawn extends Piece
                     Chess.playRound(Chess.opponents.get(king));
 
                     if (enPassant.contains(Chess.board[rowBehind][col])){
-                        // remove pawn from board
+                        // "capture" pawn
                         new Tile(row, col).place();
-
-                        Chess.materials.replace(team, Chess.materials.getOrDefault(team, 0) - materialValue);
-                        Chess.materials.replace(Chess.opponents.get(king).team, Chess.materials.getOrDefault(Chess.opponents.get(king).team, 0) + materialValue);
+                        Chess.opponents.get(king).materialGained += materialValue;
                     }
                     else {
                         // remove move access

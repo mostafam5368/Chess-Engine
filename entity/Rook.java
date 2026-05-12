@@ -1,4 +1,6 @@
 package entity;
+import java.io.IOException;
+
 import game.Chess;
 
 public final class Rook extends Piece
