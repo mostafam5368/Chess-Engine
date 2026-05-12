@@ -26,7 +26,7 @@ Custom program and move validator that simulates full legal play inside the term
 ## Usage
 
 ### Input
-* __Algebraic Notation__: Input moves by specifying piece type (except in the case of pawns) and destination square (ex. Qf3).
+* __Algebraic Notation__: Input moves by specifying piece type, except in the case of pawns, and destination square (ex. Qf3).
 * __Ambiguity__: Reprompts user if more than one ally piece of the same type can capture the destination square. Include piece file/rank in input (ex. Nef4).
 * __Castling__: Castling is inputted as a king move (ex. Kg1).
 * __Promoting__: Promote pawns by selecting the promotion piece from the pop-up menu when reaching the last rank.
@@ -38,10 +38,10 @@ This program does not feature an AI opponent.  This is a plan for future develop
 ## Game Demonstration
 
 ### Castling
-<img width="490" height="450" alt="castlingmedium" src="https://github.com/user-attachments/assets/2e44969b-ca1a-437b-aac5-0f635a114b3d" />
+<img width="490" height="450" alt="20260512-0001-11 3730360" src="https://github.com/user-attachments/assets/5e1bfbf1-2f09-48a4-ac71-93219ee33f14" />
 
 ### En Passant
-<img width="490" height="450" alt="enpassantmedium" src="https://github.com/user-attachments/assets/a38c9d23-67bb-4c02-a21e-776f12338d89" />
+<img width="490" height="450" alt="20260511-2357-47 0637416" src="https://github.com/user-attachments/assets/68d6b854-3148-4e78-bcd5-8ef5e52e23dc" />
 
 ### Turns
 <img width="490" height="450" alt="turnsmedium" src="https://github.com/user-attachments/assets/69c2d8e4-1ecc-467e-a7e3-6916415aaf93" />
