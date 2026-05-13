@@ -1,6 +1,6 @@
 # <div align="center">Chess Game</div>
 <div align="center">
-Custom program and move validator that simulates full legal play inside the terminal. All possible positions in chess are attainable. No tutorials or generative AI used.
+Chess program and move validator that simulates complete legal play inside the terminal. All possible positions in chess are attainable. No tutorials or generative AI used.
 </div>
 
 ## Installation
@@ -26,9 +26,13 @@ Custom program and move validator that simulates full legal play inside the term
 ## Usage
 
 ### Input
-* __Algebraic Notation__: Input moves by specifying piece type, except in the case of pawns, and destination square (ex. Qf3).
-* __Ambiguity__: Reprompts user if more than one ally piece of the same type can capture the destination square. Include piece file/rank in input (ex. Nef4).
-* __Castling__: Castling is inputted as a king move (ex. Kg1).
+* __Algebraic Notation__: Input moves by specifying piece type, except in the case of pawns, and destination square.
+   * ex. `e4` = move pawn to e4
+   * ex. `Qf3` = move queen to f3  
+* __Ambiguity__: Reprompts user if more than one ally piece of the same type can capture the destination square. Specify piece file/rank.
+   * ex. `Nef4` = move knight on file e to f3
+   * ex. `Nc3e4` = move knight on c3 to e4  
+* __Castling__: Castling is inputted as a king move as inspired by [Chess.com](https://www.chess.com/) (ex. Kg1).
 * __Promoting__: Promote pawns by selecting the promotion piece from the pop-up menu when reaching the last rank.
 
 ### Opponent
@@ -52,7 +56,6 @@ Every square on the board keeps a dynamic list of what pieces can capture it. Mo
 When a square on a path is affected by a move or capture, the piece the path belongs to is notified to rebuild that path. This maintains consistent play where pieces only have access to squares that they can actually see.
 
 ## Development Notebook
-While working on this as my senior project, I was required to document my work issue by issue through the GitHub Projects feature. The issues feature more in-depth explanations, thought processes, and challenges that I encountered.
+While working on this as my senior project, I was required to document my work issue by issue through the GitHub Projects feature. The issues feature more in-depth explanations, thought processes, challenges that I encountered, and the time it took me to add each feature.
 
-Access GitHub Project here: [Mostafa, Marawan - Chess Dev Notebook]()
-
+Access GitHub Project here: [Mostafa PPP 2025](https://github.com/users/mostafam5368/projects/1)
