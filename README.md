@@ -3,7 +3,21 @@
 Chess program and move validator that simulates complete legal play inside the terminal. All possible positions in chess are attainable. No tutorials or generative AI used.
 </div>
 
+
 ## Installation
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/mostafam5368/Chess-Game.git
+cd Chess-Game
+```
+
+Compile and run the project from the terminal:
+```bash
+javac main/Main.java
+java main.Main
+```
 
 
 ## Features
@@ -48,10 +62,12 @@ This program does not feature an AI opponent.  This is a plan for future develop
 ### Turns
 <img width="490" height="450" alt="turnsmedium" src="https://github.com/user-attachments/assets/69c2d8e4-1ecc-467e-a7e3-6916415aaf93" />
 
+
 ## How piece vision works
 Every square on the board keeps a dynamic list of what pieces can capture it. Move validation works by checking this list for the moving piece.
 
 When a square on a path is affected by a move or capture, the piece the path belongs to is notified to rebuild that path. This maintains consistent play where pieces only have access to squares that they can actually see.
+
 
 ## Development Notebook
 While working on this as my senior project, I was required to document my work issue by issue through the GitHub Projects feature. The issues feature more in-depth explanations, thought processes, challenges that I encountered, and the time it took me to add each feature.
