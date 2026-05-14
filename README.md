@@ -20,8 +20,6 @@ Chess program and move validator that simulates complete legal play inside the t
     * En passant
 * __King Rules__: Does not allow user to make a move that puts or keeps their king in check.
 
-> __Note__: Illegal moves that respect piece vision are completed but immediately undone.
-
 
 ## Usage
 
@@ -30,7 +28,7 @@ Chess program and move validator that simulates complete legal play inside the t
    * ex. `e4` = move pawn to e4
    * ex. `Qf3` = move queen to f3  
 * __Ambiguity__: Reprompts user if more than one ally piece of the same type can capture the destination square. Specify piece file/rank.
-   * ex. `Nef4` = move knight on file e to f4
+   * ex. `Rae1` = move rook on file a to e1
    * ex. `Nc3e4` = move knight on c3 to e4  
 * __Castling__: Castling is inputted as a king move as inspired by [Chess.com](https://www.chess.com/) (ex. Kg1).
 * __Promoting__: Promote pawns by selecting the promotion piece from the pop-up menu when reaching the last rank.
