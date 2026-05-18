@@ -33,6 +33,7 @@ java main.Main
     * Promotion
     * En passant
 * __King Rules__: Does not allow user to make a move that puts or keeps their king in check.
+* __Checkmate Detection__: Game loop ends when either king is in check and cannot escape, capture, or block the checking piece(s).
 
 
 ## Usage
@@ -48,7 +49,7 @@ java main.Main
 * __Promoting__: Promote pawns by selecting the promotion piece from the pop-up menu when reaching the last rank.
 
 ### Opponent
-This program does not feature an AI opponent.  This is a plan for future development. It is meant to be used by two people at the same screen with the board flipping its orientation every turn.
+This program does not feature an AI opponent. This is a plan for future development. It is meant to be used locally by two people with the board flipping its orientation every turn.
 
 
 ## Game Demonstration
@@ -70,6 +71,6 @@ When a square on a path is affected by a move or capture, the piece the path bel
 
 
 ## Development Notebook
-While working on this as my senior project, I was required to document my work issue by issue through the GitHub Projects feature. The issues feature more in-depth explanations, thought processes, challenges that I encountered, and the time it took me to add each feature.
+While working on this as my senior project, I was required to document my work issue by issue through GitHub Projects. The issues include more in-depth explanations, thought processes, and the time it took me to add each feature.
 
 Access GitHub Project here: [Mostafa PPP 2025](https://github.com/users/mostafam5368/projects/1)
