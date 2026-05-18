@@ -1,11 +1,9 @@
 package entity;
-import java.io.IOException;
-
 import game.Chess;
 
 public final class Rook extends Piece
 {
-    protected boolean hasMoved;
+    private boolean hasMoved;
     private int kingCastle;
 
     public Rook(King k, int r, int c){
@@ -45,7 +43,7 @@ public final class Rook extends Piece
     
     public String toString(){
         String str = "R";
-        if (team.equals("black")) str = str.toLowerCase();
+        if (team.equals(Chess.black.team)) str = str.toLowerCase();
         return str;
     } 
 }

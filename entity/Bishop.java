@@ -1,4 +1,5 @@
 package entity;
+import game.Chess;
 
 public final class Bishop extends Piece
 {
@@ -14,7 +15,7 @@ public final class Bishop extends Piece
     
     public String toString(){
         String str = "B";
-        if (team.equals("black")) str = str.toLowerCase();
+        if (team.equals(Chess.black.team)) str = str.toLowerCase();
         return str;
     }
 }

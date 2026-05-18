@@ -1,5 +1,4 @@
 package entity;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import game.Chess;
@@ -44,7 +43,6 @@ public abstract class Piece extends Entity
             maxSize = m;
             captureRule = cr;
             contents = new ArrayList<>();
-            build(row + direction[1], col + direction[0]);
         }
 
         // This method represents one step in Path building.
@@ -59,6 +57,10 @@ public abstract class Piece extends Entity
             target.seenBy.remove(Piece.this);
             seenEntities.remove(target);
             contents.remove(target);
+        }
+
+        protected void build(){
+            build(row + direction[1], col + direction[0]);
         }
 
         /*
@@ -90,23 +92,23 @@ public abstract class Piece extends Entity
 
         // The purpose of this method is to build or shrink a Path to reflect a piece's vision on the board.
         protected void refreshAt(Entity e){
-            Entity boardState = Chess.board[e.row][e.col];
-            int entityIndex = contents.indexOf(e);
+            Entity refreshedEntity = Chess.board[e.row][e.col];
+            int indexOnPath = contents.indexOf(e);
 
-            contents.set(entityIndex, boardState);
-            seenEntities.put(boardState, this);
+            contents.set(indexOnPath, refreshedEntity);
+            seenEntities.put(refreshedEntity, this);
 
-            boardState.seenBy.put(Piece.this, canCapture(boardState));
+            refreshedEntity.seenBy.put(Piece.this, canCapture(refreshedEntity));
 
-            if (entityIndex < contents.size() - 1){
+            if (indexOnPath < contents.size() - 1){
                 // shrink to meet new blocker
-                for (int i = contents.size() - 1; i > entityIndex; i--){
+                for (int i = contents.size() - 1; i > indexOnPath; i--){
                     stepFrom(contents.get(i));
                 }
             }
             else if (!contents.get(contents.size() - 1).isOccupied()){
                 // build if there is no blocker
-                build(boardState.row + direction[1], boardState.col + direction[0]);
+                build(refreshedEntity.row + direction[1], refreshedEntity.col + direction[0]);
             }
         }
     }
@@ -115,7 +117,8 @@ public abstract class Piece extends Entity
     // The purpose of this method is to build Paths in every direction the Piece is allowed.
     protected void buildPaths(){
         for (int[] dir: moveset){
-            new Path(dir, reach);
+            Path path = new Path(dir, reach);
+            path.build();
         }
     }
 
@@ -164,9 +167,9 @@ public abstract class Piece extends Entity
         super.place();
         buildPaths();
 
-        if (materialValue > 0){
-            king.materialGained += materialValue;
-        }
+        // if (materialValue > 0){
+        //     king.materialGained += materialValue;
+        // }
     }
 
     @Override

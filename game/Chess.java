@@ -9,8 +9,8 @@ public class Chess
     public static Entity[][] board = new Entity[8][8];
     public static Scanner reader;
 
-    public static King white = new King("white", 7, 4);
-    public static King black = new King("black", 0, 4);
+    public static King white = new King("White", 7, 4);
+    public static King black = new King("Black", 0, 4);
     public static int turn = 0;
 
     public static HashMap<King, King> opponents = new HashMap<>();
@@ -26,20 +26,39 @@ public class Chess
 
         // printBoard();
         // reader.nextLine();
-        // System.out.print("\033[H\033[2J");
-        // System.out.flush();
+        // clearScreen();
+
+        King winner = null;
         
         while (true){
             playRound(white);
+
+            if (black.inCheckmate()){
+                winner = white;
+                break;
+            }
+            
             playRound(black);
+
+            if (white.inCheckmate()){
+                winner = black;
+                break;
+            }
+        }
+
+        clearScreen();
+        printBoard();
+        
+        if (winner != null){
+            System.out.println(winner.team + " win.");
+        }
+        else {
+            System.out.println("Draw.");
         }
     }
 
     public static void playRound(King player){
-        // clear screen
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-
+        clearScreen();
         printBoard();
         turn++;
         prompt(player);
@@ -88,6 +107,11 @@ public class Chess
         new Rook(black, 0, 7).place();
     }
 
+    private static void clearScreen(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+    
     private static void printBoard(){
         String blackMaterial = "";
         if (black.materialGained > white.materialGained) blackMaterial += "+" + (black.materialGained - white.materialGained);
@@ -202,8 +226,9 @@ public class Chess
         } while (potentials.size() > 1 || potentials.isEmpty());
 
         Entity target = Chess.board[x][y];
+        boolean tryMove = potentials.get(0).move(x, y);
 
-        if (!potentials.get(0).move(x, y)){
+        if (!tryMove){
             prompt(player);
         }
 

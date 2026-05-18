@@ -1,5 +1,4 @@
 package entity;
-import java.io.IOException;
 import java.util.ArrayList;
 import game.Chess;
 
@@ -25,11 +24,15 @@ public final class King extends Piece
 
         for (int[] dir: moveset){
             if (dir[1] == 0){
-                new Path(new int[]{dir[0] * 2, 0}, 1, Tile.class);
-                new Path(dir, reach);
+                Path castlingPath = new Path(new int[]{dir[0] * 2, 0}, 1, Tile.class);
+                castlingPath.build();
+
+                Path sidePath = new Path(dir, reach);
+                sidePath.build();
             }
             else {
-                new Path(dir, reach);
+                Path path = new Path(dir, reach);
+                path.build();
             }
         }
     }
@@ -63,7 +66,7 @@ public final class King extends Piece
         int rightOrLeft = -(col - r.col) / Math.abs(col - r.col);
 
         for (int i = col + rightOrLeft; i >= col - 2 && i < col + 2; i += rightOrLeft){
-            if (Chess.board[row][i].capturableBy(Chess.opponents.get(this).team, Piece.class).size() > 0){
+            if (Chess.board[row][i].capturableBy(Chess.opponents.get(this).team).size() > 0){
                 return false;
             }
         }
@@ -74,7 +77,7 @@ public final class King extends Piece
             }
         }
 
-        return !inCheck() && !r.isCapturable() && !r.hasMoved;
+        return !inCheck() && !r.isCapturable();
     }
 
     public void castle(Rook r){
@@ -90,10 +93,75 @@ public final class King extends Piece
     public boolean inCheck(){
         return isCapturable();
     }
+
+    public boolean inCheckmate(){
+        if (!inCheck()) return false;
+
+        int originalRow = row;
+        int originalCol = col;
+        boolean canMove = false;
+
+        // try to move in every direction
+        for (int[] dir: moveset){
+            int x = row + dir[1];
+            int y = col + dir[0];
+
+            if (Chess.legalBounds(x, y)){
+                Entity target = Chess.board[x][y];
+
+                if (target.seenBy.get(this)){
+                    boolean tryMove = move(x, y);
+
+                    if (tryMove){
+                        canMove = true;
+
+                        target.place();
+                        capture(Chess.board[originalRow][originalCol]);
+                        buildPaths();
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (canMove){
+            return false;
+        }
+
+        ArrayList<Piece> checkingPieces = capturableBy(Chess.opponents.get(this).team);
+
+        // if it's a single checking piece that can be captured, not checkmate
+        if (checkingPieces.size() == 1){
+            Piece checkingPiece = checkingPieces.get(0);
+            ArrayList<Piece> canCapture = checkingPiece.capturableBy(team);
+
+            if (canCapture.size() > 0){
+                if (!(canCapture.size() == 1 && canCapture.contains(this))){
+                    return false;
+                }
+            }
+
+            Path checkingPath = checkingPiece.seenEntities.get(this);
+
+            for (int i = 0; i < checkingPath.contents.size() - 1; i++){
+                Entity entity = checkingPath.contents.get(i);
+                ArrayList<Piece> canBlock = entity.capturableBy(team);
+
+                if (canBlock.size() > 0){
+                    if (!(canBlock.size() == 1 && canBlock.contains(this))){
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
     
     public String toString(){
         String str = "K";
-        if (team.equals("black")) str = str.toLowerCase();
+        if (team.equals(Chess.black.team)) str = str.toLowerCase();
         if (inCheck()) str = "!";
         return str;
     }

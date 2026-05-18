@@ -1,5 +1,4 @@
 package entity;
-import java.io.IOException;
 import java.util.ArrayList;
 import game.Chess;
 
@@ -13,7 +12,7 @@ public final class Pawn extends Piece
         materialValue = 1;
 
         reach = 1;
-        if (team.equals("white")) forward = -1;
+        if (team.equals(Chess.white.team)) forward = -1;
         else forward = 1;
         
         moveset = new int[][]{
@@ -30,24 +29,26 @@ public final class Pawn extends Piece
 
         for (int[] dir: moveset){
             if (dir[0] == 0) {
-                new Path(dir, 2, Tile.class);
+                Path movingPath = new Path(dir, 2, Tile.class);
+                movingPath.build();
             }
             else {
-                new Path(dir, reach, Piece.class);
+                Path capturingPath = new Path(dir, reach, Piece.class);
+                capturingPath.build();
             }
         }
     }
 
     @Override
     public void buildPaths(){
-        seenEntities.clear();
-
         for (int[] dir: moveset){
             if (dir[0] == 0){
-                new Path(dir, reach, Tile.class);
+                Path movingPath = new Path(dir, reach, Tile.class);
+                movingPath.build();
             }
             else {
-                new Path(dir, reach, Piece.class);
+                Path capturingPath = new Path(dir, reach, Piece.class);
+                capturingPath.build();
             }
         }
     }
@@ -86,22 +87,26 @@ public final class Pawn extends Piece
                     }
 
                     // prompt opponent
-                    Chess.playRound(Chess.opponents.get(king));
+                    if (!Chess.opponents.get(king).inCheckmate()){
+                        Chess.playRound(Chess.opponents.get(king));
 
-                    if (enPassant.contains(Chess.board[rowBehind][col])){
-                        // "capture" pawn
-                        new Tile(row, col).place();
-                        Chess.opponents.get(king).materialGained += materialValue;
-                    }
-                    else {
-                        // remove move access
-                        for (Pawn pawn: enPassant){
-                            Chess.board[rowBehind][col].seenBy.remove(pawn);
+                        if (enPassant.contains(Chess.board[rowBehind][col])){
+                            // "capture" pawn
+                            new Tile(row, col).place();
+                            Chess.opponents.get(king).materialGained += materialValue;
+                        }
+                        else {
+                            // remove move access
+                            for (Pawn pawn: enPassant){
+                                Chess.board[rowBehind][col].seenBy.remove(pawn);
+                            }
+                        }
+
+                        // complete round of prompting
+                        if (!king.inCheckmate()){
+                            Chess.playRound(king);
                         }
                     }
-
-                    // complete round of prompting
-                    Chess.playRound(king);
                 }
             }
 
@@ -115,8 +120,8 @@ public final class Pawn extends Piece
 
     private void promote(){
         System.out.println("Promote:");
-        System.out.println("1. Q\t2. R");
-        System.out.println("3. N\t4. B");
+        System.out.println("1. Queen\t2. Rook");
+        System.out.println("3. Knight\t4. Bishop");
 
         int promotion = Chess.reader.nextInt();
         while (promotion < 1 || promotion > 4){
@@ -142,7 +147,7 @@ public final class Pawn extends Piece
     
     public String toString(){
         String str = "P";
-        if (team.equals("black")) str = str.toLowerCase();
+        if (team.equals(Chess.black.team)) str = str.toLowerCase();
         return str;
     }
 }
