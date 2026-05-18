@@ -1,66 +1,75 @@
 # <div align="center">Chess Game</div>
 <div align="center">
-Program that simulates full legal play inside the terminal. All possible positions in chess are attainable. No generative AI used.
+Chess program and move validator that simulates complete legal play inside the terminal. All possible positions in chess are attainable. No tutorials or generative AI used.
 </div>
 
+
 ## Installation
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/mostafam5368/Chess-Game.git
+cd Chess-Game
+```
+
+Compile and run the project from the terminal:
+```bash
+javac main/Main.java
+java main.Main
+```
 
 
 ## Features
 
 ### Functionality Overview
 
-* __Standard Rules__: Supports all rules of standard chess.
+* __Standard Rules__: Supports all rules of chess.
     * Moving and capturing
-    * Individual piece movement rules
+    * Piece types and individual movement rules
     * Blocking restrictions
-      
-* __Special Rules__: Supports special moves in chess allowed under certain conditions.
-    * En passant
+* __Special Rules__: Supports special moves allowed under certain conditions.
     * Castling
     * Promotion
-      
-* __King Rules__: Program does not allow user to make a move which puts or keeps their king in check, ensuring total legal play. 
+    * En passant
+* __King Rules__: Does not allow user to make a move that puts or keeps their king in check.
 
 
 ## Usage
 
 ### Input
-* __Algebraic Notation__: Supports algebraic chess notation as input for a move.
-    * ex. An input of “e4” → move pawn to e4
-    * ex. An input of “Qf3” → move queen to f3
-      
-* __Ambiguity__: Reprompts the user if more than one type of the same piece can capture the desired square. Include disambiguation in algebraic notation.
-    * ex. An input of “xxxx” → move queen on column x to xx
-    * ex. An input of “xxxx” → move queen on row x to xx
-    * ex. An input of “xxxx” → move queen on xx to xx
+* __Algebraic Notation__: Input moves by specifying piece type, except in the case of pawns, and destination square.
+   * ex. `e4` = move pawn to e4
+   * ex. `Qf3` = move queen to f3  
+* __Ambiguity__: Reprompts user if more than one ally piece of the same type can capture the destination square. Specify piece file/rank.
+   * ex. `Rae1` = move rook on file a to e1
+   * ex. `Nc3e4` = move knight on c3 to e4  
+* __Castling__: Castling is inputted as a king move as inspired by [Chess.com](https://www.chess.com/) (ex. Kg1).
+* __Promoting__: Promote pawns by selecting the promotion piece from the pop-up menu when reaching the last rank.
 
 ### Opponent
-This program does not feature an AI opponent. That is a plan for future development. It is meant to be used by two people at the same screen with the board flipping its orientation with every turn.
-      
-```
-more code
-```
+This program does not feature an AI opponent.  This is a plan for future development. It is meant to be used by two people at the same screen with the board flipping its orientation every turn.
 
 
 ## Game Demonstration
 
-```
-code/screenshot for moving
-```
+### Castling
+<img width="490" height="450" alt="20260512-0001-11 3730360" src="https://github.com/user-attachments/assets/5e1bfbf1-2f09-48a4-ac71-93219ee33f14" />
+
+### En Passant
+<img width="490" height="450" alt="20260511-2357-47 0637416" src="https://github.com/user-attachments/assets/68d6b854-3148-4e78-bcd5-8ef5e52e23dc" />
+
+### Turns
+<img width="490" height="450" alt="turnsmedium" src="https://github.com/user-attachments/assets/69c2d8e4-1ecc-467e-a7e3-6916415aaf93" />
 
 
 ## How piece vision works
-Every square on the board keeps a list of what pieces can capture it. When it comes time for a move, the square's list of pieces is checked for the moving piece.
+Every square on the board keeps a dynamic list of what pieces can capture it. Move validation works by checking this list for the moving piece.
 
-When a square on a path is affected by a move or capture, the piece the path belongs to is notified to rebuild that path. This maintains consistent and legal play where pieces can only capture squares they are actually allowed to.
-
-```
-more code
-```
+When a square on a path is affected by a move or capture, the piece the path belongs to is notified to rebuild that path. This maintains consistent play where pieces only have access to squares that they can actually see.
 
 
 ## Development Notebook
-While working on this project, I was required to document my work issue by issue through the GitHub Projects feature. The issues feature more in-depth explanations, thought processes, and challenges I encountered while writing this program.
+While working on this as my senior project, I was required to document my work issue by issue through the GitHub Projects feature. The issues feature more in-depth explanations, thought processes, challenges that I encountered, and the time it took me to add each feature.
 
-Access GitHub Project here: [Mostafa, Marawan - Chess Dev Notebook]()
+Access GitHub Project here: [Mostafa PPP 2025](https://github.com/users/mostafam5368/projects/1)
